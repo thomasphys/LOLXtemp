@@ -46,23 +46,6 @@ target_link_libraries(LXe ${ROOT_LIBRARIES})
 target_link_libraries(LXe ${PROJECT_SOURCE_DIR}/ds/libEvent.so)
 
 #----------------------------------------------------------------------------
-# Copy all scripts to the build directory, i.e. the directory in which we
-# build LXe. This is so that we can run the executable directly because it
-# relies on these scripts being in the current working directory.
-#
-set(LXe_SCRIPTS
-    cerenkov.mac defaults.mac LXe.in LXe.out photon.mac reviewEvent.mac vis.mac wls.mac
-  )
-
-foreach(_script ${LXe_SCRIPTS})
-  configure_file(
-    ${PROJECT_SOURCE_DIR}/${_script}
-    ${PROJECT_BINARY_DIR}/${_script}
-    COPYONLY
-    )
-endforeach()
-
-#----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
 install(TARGETS LXe DESTINATION bin)

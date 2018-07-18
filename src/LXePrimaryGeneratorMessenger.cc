@@ -42,10 +42,10 @@ LXePrimaryGeneratorMessenger::LXePrimaryGeneratorMessenger(LXePrimaryGeneratorAc
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LXeEventMessenger::~LXeEventMessenger(){
+LXePrimaryGeneratorMessenger::~LXePrimaryGeneratorMessenger(){
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LXeEventMessenger::SetNewValue(G4UIcommand* command, G4String newValue){
+void LXePrimaryGeneratorMessenger::SetNewValue(G4UIcommand* command, G4String newValue){
 }

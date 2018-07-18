@@ -73,7 +73,7 @@ G4VPhysicalVolume* LXeDetectorConstruction::ConstructDetector()
 
   G4LogicalVolume* logicWorld =
     new G4LogicalVolume(solidWorld,          //its solid
-                        DMaterials::Get_world_mat(),           //its material
+                        DMaterials::Get_fe_mat(),//DMaterials::Get_world_mat(),           //its material
                         "World");            //its name
 
   G4VPhysicalVolume* physWorld =

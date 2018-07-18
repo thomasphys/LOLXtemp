@@ -26,4 +26,5 @@ $./LXe ../runSr90.mac output.root
 
 To process output file into useful histograms:
 
-
+$cd analysiscode
+$./ProcessRun In.root Out.root 0,1 (0 = Cylindrical, 1 = Sphere)

@@ -55,10 +55,12 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
     std::vector<bool> hasfilter;
     
     MPPCVolume *SiPM_volume = new MPPCVolume();
-    FilterVolume *filter_volume = new FilterVolume(13.4*mm,0.97*mm);
+    double filterthickness = 0.97*mm;
+    double filterwidth = 13.4*mm; 
+    FilterVolume *filter_volume = new FilterVolume(filterwidth,filterthickness,false);
     
     double SiPMholder_r = 28.355044*mm + SiPM_volume->GetTopFace()+0.1;
-    double filter_r = SiPMholder_r - SiPM_volume->GetTopFace() - 1.0*mm/2.0;
+    double filter_r = SiPMholder_r - SiPM_volume->GetTopFace() -  filterthickness/2.0;
     
     //Put this in lookup file
     rot.push_back(pi/4.); theta.push_back(pi/8.); phi.push_back(0.0); hasfilter.push_back(true);

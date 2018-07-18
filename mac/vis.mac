@@ -14,18 +14,18 @@
 #    The compound command "/vis/open <vis-driver-name>"
 #    is equivalent to the following set of commands:
 #
-#    /vis/sceneHandler/create
-#    /vis/viewer/create
+/vis/sceneHandler/create
+/vis/viewer/create
 #
 # Create a scene handler and a viewer for the OGLIX driver
-#/vis/open OGL 600x600-0+0
-/vis/open DAWNFILE
+/vis/open OGL 600x600-0+0
+#/vis/open DAWNFILE
 #
-#/vis/viewer/set/style wireframe
+/vis/viewer/set/style wireframe
 # Set direction from target to camera.
-#/vis/viewer/set/viewpointVector 1 1.5 1.1
-#/vis/viewer/set/viewpointThetaPhi 90 180 deg
-#/vis/viewer/zoom 1.4
+/vis/viewer/set/viewpointVector 1 1.5 1.1
+/vis/viewer/set/viewpointThetaPhi 90 180 deg
+/vis/viewer/zoom 1.4
 #
 #    The compound command "/vis/drawVolume"
 #    is equivalent to the following set of commands:
