@@ -37,7 +37,6 @@ G4RotationMatrix* BuildRotation(G4double eta,G4double theta,G4double phi){
 
     G4RotationMatrix *RotMat = new G4RotationMatrix();
     RotMat->rotateZ(pi*rad-phi*rad);
-    //RotMat->rotateY(-theta*rad);
     RotMat->rotateY(pi*rad+theta*rad);
     RotMat->rotateZ(eta*rad);
     return RotMat;
@@ -114,7 +113,7 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
                                            filter_r*TMath::Cos(theta[i])));
     }
  
-    CADMesh * mesh = new CADMesh("/home/tmcelroy/lolxsim/data/LoLXSphere.stl",mm,G4ThreeVector(-32.35,-32.35,-32.35),false);
+    CADMesh * mesh = new CADMesh(Form("%s/LoLXSphere.stl",std::getenv("LOLXSTLDIR")),mm,G4ThreeVector(-32.35,-32.35,-32.35),false);
     LoLXSphere = mesh->TessellatedMesh();
     LoLXSphere_log = new G4LogicalVolume(LoLXSphere,DMaterials::Get_fPMMA(),"LoLXSphere_log");
     new G4PVPlacement(0,G4ThreeVector(),LoLXSphere_log,"LoLXSphere_Physics",pMotherLogical,false,0);

@@ -8,7 +8,7 @@ exe = libEvent.so
 HEADERS = Event.h  MPPC.h
 
 libEvent.so: Dict.cxx
-	g++ -shared -o$@ `root-config --ldflags` -fPIC $(INC) $(LIBS) $^
+	g++ -shared -o$@ `root-config --ldflags` -fPIC -std=c++11 $(INC) $(LIBS) $^
 
 Dict.cxx: $(HEADERS) LinkDef.h 
 	rootcint -f $@ -c  -p $(INC) $^

@@ -4,7 +4,7 @@
 
 FilterVolume::FilterVolume(G4double Window_sizeXY,G4double Window_sizeZ,bool boarder)
   //Pass info to the G4PVPlacement constructor
-  :G4LogicalVolume(new G4Box("temp",Window_sizeXY,Window_sizeXY,Window_sizeZ/2.),DMaterials::Get_xenon_mat(),"temp",0,0,0)
+  :G4LogicalVolume(new G4Box("temp",Window_sizeXY/2.,Window_sizeXY/2.,Window_sizeZ/2.),DMaterials::Get_xenon_mat(),"temp",0,0,0)
 {
     bool checkOverlaps = true;
     
