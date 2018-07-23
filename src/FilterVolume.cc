@@ -34,6 +34,9 @@ FilterVolume::FilterVolume(G4double Window_sizeXY,G4double Window_sizeZ,bool boa
     	G4SubtractionSolid* b1minusb2 = new G4SubtractionSolid("box1-box2",box2,box1,0,translation);
 	G4LogicalVolume* Boarderlogic = new G4LogicalVolume(b1minusb2, DMaterials::Get_fPMMA(), "boarderlog");
 	new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),Boarderlogic,"boarder",this,0,checkOverlaps);
+
+	G4OpticalSurface* pmma_opsurf= new G4OpticalSurface("sipm_opsurf",glisur,ground,dielectric_dielectric);
+  	new G4LogicalSkinSurface("pmma_surf",Boarderlogic,pmma_opsurf);
     }
 
     G4OpticalSurface* OpSurface = new G4OpticalSurface("name");

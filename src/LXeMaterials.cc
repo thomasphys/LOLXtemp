@@ -303,7 +303,7 @@ LXeMaterials::LXeMaterials()
   fSi->SetMaterialPropertiesTable(Si_mt);
   
   G4double Ceramic_Energy[3] = {0.1*eV,1.0*eV,10.0*eV};
-  G4double Ceramic_Abs[3] = {0.1*mm,0.1*mm,0.1*mm};
+  G4double Ceramic_Abs[3] = {0.01*mm,0.01*mm,0.01*mm};
   
   G4MaterialPropertiesTable *ceramic_mt = new G4MaterialPropertiesTable();
   ceramic_mt->AddProperty("ABSLENGTH",Ceramic_Energy,Ceramic_Abs,3);

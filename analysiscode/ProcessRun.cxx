@@ -92,7 +92,7 @@ int main(int argc, char** argv)
     	quad[0] = TVector3( (Package_sizeXY+gap)/2., (Package_sizeXY+gap)/2.,0.0);
     	quad[1] = TVector3( (Package_sizeXY+gap)/2.,-(Package_sizeXY+gap)/2.,0.0);
     	quad[2] = TVector3(-(Package_sizeXY+gap)/2., (Package_sizeXY+gap)/2.,0.0);
-    	quad[3] = TVector3(-(Package_sizeXY+gap)/2., (Package_sizeXY+gap)/2.,0.0);
+    	quad[3] = TVector3(-(Package_sizeXY+gap)/2.,-(Package_sizeXY+gap)/2.,0.0);
 
 
     	double rad_temp = Package_sizeXY*sqrt(2)-1.5;
@@ -208,12 +208,16 @@ int main(int argc, char** argv)
 		 if(groupfMax[jj]>max_groupfmax) max_groupfmax = groupfMax[jj];
 		 if(fMax[jj]>max_fmax) max_fmax = fMax[jj];
 	}
-        Printf(Form("%d: Filtered = %f unfiltered %f",i,integral_filtered,integral_nonfiltered)); 
+        //Printf(Form("%d: Filtered = %f unfiltered %f",i,integral_filtered,integral_nonfiltered)); 
         Filtered_NonFiltered->Fill(integral_nonfiltered, integral_filtered);
 	fMaxHist->Fill(integral_filtered,max_fmax);
 	GroupfMaxHist->Fill(integral_filtered,max_groupfmax);
-	MCScintillation_Vs_MCCherenkov->Fill(ds->GetMCSintillation()*((1.0)/(n_sipm))+ds->GetMCCherenkov()*(((double)(1.0))/(n_sipm)),
-					     ds->GetMCCherenkov()*(((double)(n_sipm-1))/(n_sipm)));
+
+	double fillfactor = 1.0;
+	if(argc >3 && std::atoi(argv[3]) == 1) fillfactor = 0.53;
+
+	MCScintillation_Vs_MCCherenkov->Fill(fillfactor*(ds->GetMCSintillation()*((1.0)/(n_sipm))+ds->GetMCCherenkov()*(((double)(1.0))/(n_sipm))),
+					     fillfactor*(ds->GetMCCherenkov()*(((double)(n_sipm-1))/(n_sipm))));
 	int nsamples = ds->GetCherenkovSpectrumCount();
 	for(int jj=0; jj<nsamples; ++jj){
 		NMCCherenkov_Vs_CherSpectrum->Fill(ds->GetMCCherenkov(),ds->GetCherenkovWavelength(jj));

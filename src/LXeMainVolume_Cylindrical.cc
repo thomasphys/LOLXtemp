@@ -61,7 +61,7 @@ LXeMainVolume_Cylindrical::LXeMainVolume_Cylindrical(G4RotationMatrix *pRot,cons
     G4double Package_sizeZ = 2.5*mm;  // everything is housed within this volume
     G4double Package_border = 1.5*mm; // this is the size of the border that is left by the indent
                                       // in the ceramic holding structure.
-    G4double Window_gap_scaler = 1.0; // normall 1.5 how much larger the distance from the edge of the Packagelogic will be compared to the Package_border
+    G4double Window_gap_scaler = 0.5; // normall 1.5 how much larger the distance from the edge of the Packagelogic will be compared to the Package_border
     bool checkOverlaps = true;
     
     G4double Value_XY = xenon_sizeXY/2. + Package_sizeZ/2.;
@@ -92,7 +92,7 @@ LXeMainVolume_Cylindrical::LXeMainVolume_Cylindrical(G4RotationMatrix *pRot,cons
     quad[0] = G4ThreeVector( (Package_sizeXY+gap)/2., (Package_sizeXY+gap)/2.,0.0);
     quad[1] = G4ThreeVector( (Package_sizeXY+gap)/2.,-(Package_sizeXY+gap)/2.,0.0);
     quad[2] = G4ThreeVector(-(Package_sizeXY+gap)/2., (Package_sizeXY+gap)/2.,0.0);
-    quad[3] = G4ThreeVector(-(Package_sizeXY+gap)/2., (Package_sizeXY+gap)/2.,0.0);
+    quad[3] = G4ThreeVector(-(Package_sizeXY+gap)/2., -(Package_sizeXY+gap)/2.,0.0);
     
     //Put this in lookup file
     G4double rad_temp = (Package_sizeXY+gap)*sqrt(2);
