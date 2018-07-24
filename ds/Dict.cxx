@@ -257,7 +257,7 @@ namespace ROOT {
       vector<float> *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<float>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<float>", -2, "vector", 447,
+         instance("vector<float>", -2, "vector", 216,
                   typeid(vector<float>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlEfloatgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<float>) );
@@ -320,7 +320,7 @@ namespace ROOT {
       vector<double> *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<double>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<double>", -2, "vector", 447,
+         instance("vector<double>", -2, "vector", 216,
                   typeid(vector<double>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlEdoublegR_Dictionary, isa_proxy, 0,
                   sizeof(vector<double>) );
@@ -383,7 +383,7 @@ namespace ROOT {
       vector<MPPC*> *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<MPPC*>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<MPPC*>", -2, "vector", 447,
+         instance("vector<MPPC*>", -2, "vector", 216,
                   typeid(vector<MPPC*>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlEMPPCmUgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<MPPC*>) );
@@ -439,9 +439,9 @@ namespace {
 0
     };
     static const char* includePaths[] = {
-"/phys/rootbuild/include",
-"/phys/rootbuild/include",
-"/Users/tmcelroy/lolxsim/ds/",
+"/phys/root/rootbuild/include",
+"/phys/root/rootbuild/include",
+"/home/tmcelroy/lolxsim/ds/",
 0
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(
@@ -475,7 +475,7 @@ nullptr};
     if (!isInitialized) {
       TROOT::RegisterModule("Dict",
         headers, includePaths, payloadCode, fwdDeclCode,
-        TriggerDictionaryInitialization_Dict_Impl, {}, classesHeaders);
+        TriggerDictionaryInitialization_Dict_Impl, {}, classesHeaders, /*has no C++ module*/false);
       isInitialized = true;
     }
   }

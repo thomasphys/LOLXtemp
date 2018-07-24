@@ -94,7 +94,6 @@ int main(int argc, char** argv)
     	quad[2] = TVector3(-(Package_sizeXY+gap)/2., (Package_sizeXY+gap)/2.,0.0);
     	quad[3] = TVector3(-(Package_sizeXY+gap)/2.,-(Package_sizeXY+gap)/2.,0.0);
 
-
     	double rad_temp = Package_sizeXY*sqrt(2)-1.5;
     	rad.push_back(rad_temp); phi.push_back(0.0); theta.push_back(pi/2.); hasfilter.push_back(true);
     	rad.push_back(rad_temp); phi.push_back(0.0); theta.push_back(pi/2.); hasfilter.push_back(true);
@@ -158,6 +157,10 @@ int main(int argc, char** argv)
     TH2F *MCScintillation_Vs_MCCherenkov = new TH2F("MCScintillation_Vs_MCCherenkov","",10000,0.,10000.,10000,0,10000.);
     TH2F *NMCCherenkov_Vs_CherSpectrum = new TH2F("NMCCherenkov_Vs_CherSpectrum","",10000,0.,10000.,700,0.,700.);
     TH2F *NonFiltered_vs_CherSpectrum = new TH2F("NonFiltered_vs_CherSpectrum","",10000,0.,10000.,700,0.,700.);
+    TH1F *SiPM_TotalHits = new TH1F("SiPM_TotalHits","",n_sipm,-0.5,(double)n_sipm -0.5);
+    TH1F *SiPM_ScintillationHits = new TH1F("SiPM_ScintillationHits","",n_sipm,-0.5,(double)n_sipm -0.5);
+    TH1F *SiPM_CherenkovHits = new TH1F("SiPM_CherenkovHits","",n_sipm,-0.5,(double)n_sipm -0.5);
+
     TChain* t = new TChain("T");
     t->AddFile(argv[1]);
     Event* ds = NULL;
@@ -199,6 +202,9 @@ int main(int argc, char** argv)
             }else{
                 integral_nonfiltered += mppc->GetHitCount();
             }
+	    SiPM_TotalHits->Fill(siPMid,mppc->GetHitCount());
+    	    SiPM_ScintillationHits->Fill(siPMid,mppc->GetScintillationHitCount());
+    	    SiPM_CherenkovHits->Fill(siPMid,mppc->GetCherenkovHitCount());
         }
 	double max_groupfmax = 0.0;
 	double max_fmax = 0.0;
@@ -214,9 +220,9 @@ int main(int argc, char** argv)
 	GroupfMaxHist->Fill(integral_filtered,max_groupfmax);
 
 	double fillfactor = 1.0;
-	if(argc >3 && std::atoi(argv[3]) == 1) fillfactor = 0.53;
+	//if(argc >3 && std::atoi(argv[3]) == 1) fillfactor = 0.53;
 
-	MCScintillation_Vs_MCCherenkov->Fill(fillfactor*(ds->GetMCSintillation()*((1.0)/(n_sipm))+ds->GetMCCherenkov()*(((double)(1.0))/(n_sipm))),
+	MCScintillation_Vs_MCCherenkov->Fill(fillfactor*(ds->GetMCSintillation()*(1.0/(n_sipm))+ds->GetMCCherenkov()*(1.0/(n_sipm))),
 					     fillfactor*(ds->GetMCCherenkov()*(((double)(n_sipm-1))/(n_sipm))));
 	int nsamples = ds->GetCherenkovSpectrumCount();
 	for(int jj=0; jj<nsamples; ++jj){
@@ -232,6 +238,9 @@ int main(int argc, char** argv)
     MCScintillation_Vs_MCCherenkov->Write();
     NMCCherenkov_Vs_CherSpectrum->Write();
     NonFiltered_vs_CherSpectrum->Write();
+    SiPM_TotalHits->Write();
+    SiPM_ScintillationHits->Write();
+    SiPM_CherenkovHits->Write();
     fout->Close();
 
     return 0;
