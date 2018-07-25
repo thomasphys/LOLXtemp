@@ -52,6 +52,8 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
     std::vector<G4ThreeVector> pos_sipm;
     std::vector<G4ThreeVector> pos_filter;
     std::vector<bool> hasfilter;
+
+    int version = 2;
     
     MPPCVolume *SiPM_volume = new MPPCVolume();
     double filterthickness = 0.97*mm;
@@ -59,6 +61,7 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
     FilterVolume *filter_volume = new FilterVolume(filterwidth,filterthickness,false);
     
     double SiPMholder_r = 28.355044*mm + SiPM_volume->GetTopFace()+0.1;
+    if(version == 2) SiPMholder_r += 0.4*mm;
     double filter_r = SiPMholder_r - SiPM_volume->GetTopFace() -  filterthickness/2.0;
     
     //Put this in lookup file
@@ -113,7 +116,7 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
                                            filter_r*TMath::Cos(theta[i])));
     }
  
-    CADMesh * mesh = new CADMesh(Form("%s/LoLXSphere.stl",std::getenv("LOLXSTLDIR")),mm,G4ThreeVector(-32.35,-32.35,-32.35),false);
+    CADMesh * mesh = new CADMesh(Form("%s/LoLXSphere%d.stl",std::getenv("LOLXSTLDIR"),version),mm,G4ThreeVector(-32.35,-32.35,-32.35),false);
     LoLXSphere = mesh->TessellatedMesh();
     LoLXSphere_log = new G4LogicalVolume(LoLXSphere,DMaterials::Get_fPMMA(),"LoLXSphere_log");
     new G4PVPlacement(0,G4ThreeVector(),LoLXSphere_log,"LoLXSphere_Physics",pMotherLogical,false,0);

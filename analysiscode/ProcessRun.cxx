@@ -202,9 +202,9 @@ int main(int argc, char** argv)
             }else{
                 integral_nonfiltered += mppc->GetHitCount();
             }
-	    SiPM_TotalHits->Fill(siPMid,mppc->GetHitCount());
-    	    SiPM_ScintillationHits->Fill(siPMid,mppc->GetScintillationHitCount());
-    	    SiPM_CherenkovHits->Fill(siPMid,mppc->GetCherenkovHitCount());
+	    SiPM_TotalHits->Fill(siPMid,mppc->GetHitCount()*n_mppc);
+    	    SiPM_ScintillationHits->Fill(siPMid,mppc->GetScintillationHitCount()*n_mppc);
+    	    SiPM_CherenkovHits->Fill(siPMid,mppc->GetCherenkovHitCount()*n_mppc);
         }
 	double max_groupfmax = 0.0;
 	double max_fmax = 0.0;
