@@ -42,8 +42,7 @@ G4RotationMatrix* BuildRotation(G4double eta,G4double theta,G4double phi){
     return RotMat;
 }
 
-LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeVector &tlate,G4LogicalVolume *pMotherLogical)
-  //:G4PVPlacement(pRot,tlate,new G4LogicalVolume(new G4Box("temp",1,1,1),DMaterials::Get_xenon_mat(),"temp",0,0,0), "housing",pMotherLogical,0,0)
+LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeVector &tlate,G4LogicalVolume *pMotherLogical,int version)
 {
     
     std::vector<G4double> rot;
@@ -52,8 +51,6 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
     std::vector<G4ThreeVector> pos_sipm;
     std::vector<G4ThreeVector> pos_filter;
     std::vector<bool> hasfilter;
-
-    int version = 2;
     
     MPPCVolume *SiPM_volume = new MPPCVolume();
     double filterthickness = 0.97*mm;
@@ -61,7 +58,11 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
     FilterVolume *filter_volume = new FilterVolume(filterwidth,filterthickness,false);
     
     double SiPMholder_r = 28.355044*mm + SiPM_volume->GetTopFace()+0.1;
-    if(version == 2) SiPMholder_r += 0.4*mm;
+    G4ThreeVector sphereshift = G4ThreeVector(0.,0.,0.);
+    if(version == 2){
+        SiPMholder_r += 0.0*mm;
+        sphereshift = G4ThreeVector(-5.*mm,-5.*mm,-5.*mm);
+    }
     double filter_r = SiPMholder_r - SiPM_volume->GetTopFace() -  filterthickness/2.0;
     
     //Put this in lookup file
@@ -119,7 +120,7 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
     CADMesh * mesh = new CADMesh(Form("%s/LoLXSphere%d.stl",std::getenv("LOLXSTLDIR"),version),mm,G4ThreeVector(-32.35,-32.35,-32.35),false);
     LoLXSphere = mesh->TessellatedMesh();
     LoLXSphere_log = new G4LogicalVolume(LoLXSphere,DMaterials::Get_fPMMA(),"LoLXSphere_log");
-    new G4PVPlacement(0,G4ThreeVector(),LoLXSphere_log,"LoLXSphere_Physics",pMotherLogical,false,0);
+    new G4PVPlacement(0,sphereshift,LoLXSphere_log,"LoLXSphere_Physics",pMotherLogical,false,0);
  
     //***********Arrange pmts around the outside of housing**********
     //---pmt sensitive detector
@@ -136,8 +137,6 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
     
     int k=0;
     for(int i=0; i<n_sipm; ++i){
-    //for(int i=0; i<1; ++i){
-       // if(i<16 or i>20) continue;
         new G4PVPlacement(BuildRotation(rot[i],theta[i],phi[i]),pos_sipm[i],SiPM_volume,"sipmtholder",pMotherLogical,false,i,true);
 
         G4ThreeVector chippos = SiPM_volume->GetChipPosition(0,BuildRotation(rot[i],theta[i],phi[i]),pos_sipm[i]);
@@ -155,6 +154,7 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
     }
  
     SiPM_volume->GetChipLogicVolume()->SetSensitiveDetector(SiPM_SD);
+ 
     SurfaceProperties();
 }
 

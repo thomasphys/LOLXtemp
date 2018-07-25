@@ -60,7 +60,7 @@ class LXeMainVolume_Sphere //: public G4PVPlacement
 
     LXeMainVolume_Sphere(G4RotationMatrix *pRot,
                  const G4ThreeVector &tlate,
-                 G4LogicalVolume *pMotherLogical);
+                 G4LogicalVolume *pMotherLogical,int version);
 
   private:
 

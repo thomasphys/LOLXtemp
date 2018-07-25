@@ -63,7 +63,7 @@ class LXeDetectorMessenger: public G4UImessenger
     G4UIcmdWithABool*            fLxeCmd;
     G4UIcommand*                 fUpdateCmd;
     G4UIcommand*                 fDefaultsCmd;
-    G4UIcommand*                 fGeometry_Sphere;
+    G4UIcmdWithAnInteger*        fGeometry_Sphere;
     G4UIcommand*                 fGeometry_Cylindrical;
     G4UIcmdWithADouble*        fMainScintYield;
 };

@@ -100,8 +100,8 @@ G4VPhysicalVolume* LXeDetectorConstruction::ConstructDetector()
 
 //put in two geometries
   //Place the main volume
-  if(fGeometry ==  1){
-    new LXeMainVolume_Sphere(0,G4ThreeVector(),logicXenon);
+  if(fGeometry>  0){
+    new LXeMainVolume_Sphere(0,G4ThreeVector(),logicXenon,fGeometry);
   }else{
     new LXeMainVolume_Cylindrical(0,G4ThreeVector(),logicXenon);
   }

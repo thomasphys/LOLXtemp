@@ -77,7 +77,7 @@ LXeDetectorMessenger::LXeDetectorMessenger(LXeDetectorConstruction* detector)
   fDefaultsCmd->SetGuidance("Set all detector geometry values to defaults.");
   fDefaultsCmd->SetGuidance("(Update still required)");
   
-  fGeometry_Sphere = new G4UIcommand("/LXe/detector/sphere",this);
+  fGeometry_Sphere = new G4UIcmdWithAnInteger("/LXe/detector/sphere",this);
   fGeometry_Sphere->SetGuidance("Set spherical detector geometry.");
   
   fGeometry_Cylindrical = new G4UIcommand("/LXe/detector/cylindrical",this);
@@ -132,7 +132,7 @@ void LXeDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
    fLXeDetector->SetMainScintYield(fMainScintYield->GetNewDoubleValue(newValue));
   }
   else if (command == fGeometry_Sphere){
-    fLXeDetector->SetGeometry(1);
+    fLXeDetector->SetGeometry(fGeometry_Sphere->GetNewIntValue(newValue));
   }
   else if (command == fGeometry_Cylindrical){
     fLXeDetector->SetGeometry(0);
