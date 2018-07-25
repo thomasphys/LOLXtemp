@@ -30,6 +30,8 @@
 
 #include "LXeMaterials.hh"
 
+#include "LOLXReadData.hh"
+
 #include "G4LogicalBorderSurface.hh"
 #include "G4LogicalSkinSurface.hh"
 #include "G4OpticalSurface.hh"
