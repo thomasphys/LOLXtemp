@@ -60,7 +60,7 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
     double SiPMholder_r = 28.355044*mm + SiPM_volume->GetTopFace()+0.1;
     G4ThreeVector sphereshift = G4ThreeVector(0.,0.,0.);
     if(version == 2){
-        SiPMholder_r += 0.0*mm;
+        SiPMholder_r += 0.00*mm;
         sphereshift = G4ThreeVector(-5.*mm,-5.*mm,-5.*mm);
     }
     double filter_r = SiPMholder_r - SiPM_volume->GetTopFace() -  filterthickness/2.0;
