@@ -39,6 +39,7 @@
 #include "globals.hh"
 #include "G4LogicalSkinSurface.hh"
 #include "G4SystemOfUnits.hh"
+#include "LOLXReadData.hh"
 
 class MPPCVolume : public G4LogicalVolume
 {

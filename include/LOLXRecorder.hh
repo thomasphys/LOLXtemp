@@ -27,7 +27,7 @@ class LOLXRecorder : public LXeRecorderBase{
 	}
 
     virtual void RecordEndOfRun(const G4Run*) override {
-        
+        printf("Closing Output File %s\n",LOLXOutputFileName);
 		fout->cd();
 		tree->Write();
 		fout->Close();
@@ -65,22 +65,17 @@ class LOLXRecorder : public LXeRecorderBase{
             }
         }
 
-   	event->SetMCSintillation(eventInformation->GetPhotonCount_Scint());
+        event->SetMCSintillation(eventInformation->GetPhotonCount_Scint());
         event->SetMCCherenkov(eventInformation->GetPhotonCount_Ceren());
 
-	 int nsamples = eventInformation->GetCherenkovSamples();
-	 for(int i=0; i<nsamples; ++i){
-    		double photonenergy = eventInformation->GetCherenkovPhotonEnergy(i);
-    		double electronenergy = eventInformation->GetElectronMomentum(i);
-		photonenergy = 1240./(photonenergy*1.0e6);
-		electronenergy/=.511;
-		electronenergy += 1.0;
-		electronenergy = 1./electronenergy;
-		electronenergy = TMath::Sqrt(electronenergy);
-		electronenergy = 1.0 - electronenergy;
-		event->AddCherenkovWavelength(photonenergy);
-        	event->AddElectronBeta(TMath::Sqrt(electronenergy));
-	}
+        int nsamples = eventInformation->GetCherenkovSamples();
+        //printf("nsamples = %d\n",nsamples);
+        for(int i=0; i<nsamples; ++i){
+            //printf("Cherenkov energy %d %f\n",i,eventInformation->GetCherenkovPhotonEnergy(i));
+            event->AddCherenkovWavelength(eventInformation->GetCherenkovPhotonEnergy(i));
+        	event->AddElectronBeta(0.0);
+            //printf("                 %d %f\n",i,event->GetCherenkovWavelength(i));
+        }
 
         tree->Fill();
         counter++;

@@ -113,27 +113,22 @@ G4ThreeVector MPPCVolume::GetChipPosition(G4int num,G4RotationMatrix* rot,G4Thre
 
 void MPPCVolume::SurfaceProperties(){
 
-    const G4int NUMENTRIES1 = 850;  //from 150 to 1000 
-    G4double LXe_PP1[NUMENTRIES1];  //energies
-    G4double LXe_SCINT1[NUMENTRIES1]; //emission probability
-    G4double LXe_RIND1[NUMENTRIES1]; // Refraction index
-    G4double LXe_ABSL1[NUMENTRIES1]; // Absorption length
-    G4double LXe_Rayleigh1[NUMENTRIES1]; // Rayleigh scattering length
+    const G4int NUMENTRIES1 = 850;  //from 150 to 1000
+    G4double energy[NUMENTRIES1];
+    G4double reflectivity[NUMENTRIES1];
+    G4double efficiency[NUMENTRIES1];
+    G4double reflectivity_ceramic[NUMENTRIES1];
+    G4double efficiency_ceramic[NUMENTRIES1];
     
     for(int iE=0; iE<NUMENTRIES1; iE++){
-      G4double WL=1000-(iE); // starting from 1000nm WL, ending with 150nm  
-
-
-      LXe_PP1[iE]=1240/(WL)*eV; // tabulate energy
-      LXe_SCINT1[iE] = 1./sqrt(2*3.14)/5.*exp(-pow((WL-178.)/5.,2.)/2.);//approximating with a gaus (178,5)
-      LXe_RIND1[iE] = sqrt(1.5+
-			0.38*WL*WL/(WL*WL-146.9*146.9)+
-			0.009*WL*WL/(WL*WL-827*827));//from https://arxiv.org/pdf/1502.04213.pdf  AS Feb 21, 2018
-      if(WL>700) LXe_RIND1[iE]=1.365;// avoid the fall of ref index in the formula
-  //    if(WL<150) LXe_RIND1[iE]=1.7;
-      LXe_ABSL1[iE] = 200.*cm;
-      LXe_Rayleigh1[iE] = 35.*cm; // need to code proper formula but should not be critical for LoLX
-      G4cout << " WL= " << WL<< " and energy="<<LXe_PP1[iE]<< " iE="<<iE<<G4endl; //debug output
+      G4double WL=1000.-(iE); // starting from 1000nm WL, ending with 150nm
+      energy[iE]=1240./WL; // tabulate energy
+      reflectivity[iE] = 0.0;
+      efficiency[iE] = LOLXReadData::GetSiPM_Efficiency(energy[iE]);
+      reflectivity_ceramic[iE] = 0.25;
+      efficiency_ceramic[iE] = 0.0;
+        //printf("Wl = %f energy = %f eff = %f\n",WL,energy[iE],efficiency[iE]);
+      energy[iE]*=eV;
     }
 
 
@@ -142,11 +137,9 @@ void MPPCVolume::SurfaceProperties(){
     OpMPPCSurface->SetType(dielectric_metal); //_metal
     OpMPPCSurface->SetFinish(polished);
 
-    G4double reflectivity[NUMENTRIES1];for(double &r: reflectivity) r=0.; // non Reflective
-    G4double efficiency[NUMENTRIES1];for(double &r: efficiency) r=1.0; // Perfect efficiency
     G4MaterialPropertiesTable* MPPCTable = new G4MaterialPropertiesTable();
-    MPPCTable->AddProperty("REFLECTIVITY",LXe_PP1,reflectivity,NUMENTRIES1);
-    MPPCTable->AddProperty("EFFICIENCY",LXe_PP1,efficiency,NUMENTRIES1);
+    MPPCTable->AddProperty("REFLECTIVITY",energy,reflectivity,NUMENTRIES1);
+    MPPCTable->AddProperty("EFFICIENCY",energy,efficiency,NUMENTRIES1);
     OpMPPCSurface->SetMaterialPropertiesTable(MPPCTable);
     new G4LogicalSkinSurface("OpMPPCSurface",MPPClogic,OpMPPCSurface);
 
@@ -155,11 +148,11 @@ void MPPCVolume::SurfaceProperties(){
     OpCeramicSurface->SetType(dielectric_metal);
     OpCeramicSurface->SetFinish(ground);
 
-    G4double reflectivity_ceramic[NUMENTRIES1];for(double &r: reflectivity_ceramic) r=0.8; // 80% Reflective ceramic MPPC holding structure
-    G4double efficiency_ceramic[NUMENTRIES1];for(double &r: efficiency_ceramic) r=0; // zero efficiency
+    for(double &r: reflectivity_ceramic) r=0.25; // 80% Reflective ceramic MPPC holding structure
+    for(double &r: efficiency_ceramic) r=0; // zero efficiency
     G4MaterialPropertiesTable* CeramicTable = new G4MaterialPropertiesTable();
-    CeramicTable->AddProperty("REFLECTIVITY",LXe_PP1,reflectivity_ceramic,NUMENTRIES1);
-    CeramicTable->AddProperty("EFFICIENCY",LXe_PP1,efficiency_ceramic,NUMENTRIES1);
+    CeramicTable->AddProperty("REFLECTIVITY",energy,reflectivity_ceramic,NUMENTRIES1);
+    CeramicTable->AddProperty("EFFICIENCY",energy,efficiency_ceramic,NUMENTRIES1);
     OpCeramicSurface->SetMaterialPropertiesTable(CeramicTable);
     new G4LogicalSkinSurface("OpCeramicSurface",Ceramiclogic,OpCeramicSurface); //This surface is for the Ceramic, hence for Ceramiclogic
   

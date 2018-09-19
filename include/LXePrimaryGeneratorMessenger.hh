@@ -32,6 +32,8 @@
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
+#include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithAnInteger.hh"
 
 class LXePrimaryGeneratorAction;
 class G4UIcmdWithAnInteger;
@@ -43,12 +45,15 @@ class LXePrimaryGeneratorMessenger: public G4UImessenger
 
     LXePrimaryGeneratorMessenger(LXePrimaryGeneratorAction*);
     virtual ~LXePrimaryGeneratorMessenger();
- 
+    
     virtual void SetNewValue(G4UIcommand*, G4String);
  
   private:
 
     LXePrimaryGeneratorAction*        fLXePrimaryGenerator;
+    G4UIdirectory *fGeneratorDir;
+    G4UIcmdWithAString *fSetGenCmd;
+    G4UIcmdWithAnInteger *fSetGeoCmd;
 };
 
 #endif

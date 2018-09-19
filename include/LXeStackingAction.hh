@@ -32,6 +32,8 @@
 
 #include "globals.hh"
 #include "G4UserStackingAction.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 
 class LXeStackingAction : public G4UserStackingAction
 {

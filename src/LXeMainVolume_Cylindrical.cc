@@ -55,6 +55,34 @@ LXeMainVolume_Cylindrical::LXeMainVolume_Cylindrical(G4RotationMatrix *pRot,cons
   //Pass info to the G4PVPlacement constructor
   //:G4PVPlacement(pRot,tlate,new G4LogicalVolume(new G4Box("temp",19*mm,19*mm,38*mm),DMaterials::Get_xenon_mat(),"temp",0,0,0),"housing",pMotherLogical,0,0)
 {
+    
+    bool checkOverlaps = true;
+    
+    G4RotationMatrix *RotMat = new G4RotationMatrix();
+    RotMat->rotateX(-pi/2.);
+    RotMat->rotateY(pi*(22.5/180.));
+    G4RotationMatrix *RotMat2 = new G4RotationMatrix();
+    RotMat2->rotateX(-pi/2.);
+    RotMat2->rotateY(pi*(22.5/180.));
+    RotMat2->rotateZ(-pi);
+    //(,z,) 65.11/2.
+ /*   CADMesh * mesh = new CADMesh(Form("%s/LoLXCylinder%d.stl",std::getenv("LOLXSTLDIR"),1),mm,G4ThreeVector(-30.08,-20.5,-30.08),false);
+    LoLXCylinder = mesh->TessellatedMesh();
+    LoLXCylinder_log = new G4LogicalVolume(LoLXCylinder,DMaterials::Get_fPMMA(),"LoLXCylinder_log");
+    new G4PVPlacement(RotMat,G4ThreeVector(0.,0.,0.),LoLXCylinder_log,"LoLXCylinder_Physics",pMotherLogical,false,0);
+*/
+    
+    CADMesh * meshside = new CADMesh(Form("%s/SideOctagon.STL",std::getenv("LOLXSTLDIR"),1),mm,G4ThreeVector(-24.9,-16.0,-24.9),false);
+    LoLXCylinderSide = meshside->TessellatedMesh();
+    LoLXCylinder_logSide = new G4LogicalVolume(LoLXCylinderSide,DMaterials::Get_fPMMA(),"LoLXCylinder_logSide");
+    new G4PVPlacement(RotMat,G4ThreeVector(0.,0.,0.),LoLXCylinder_logSide,"LoLXCylinder_PhysicsSide",pMotherLogical,false,0,checkOverlaps);
+    
+    CADMesh * meshtop = new CADMesh(Form("%s/TopOctagon.STL",std::getenv("LOLXSTLDIR"),1),mm,G4ThreeVector(-30.08,-2.25,-30.08),false);
+    LoLXCylinderTop = meshtop->TessellatedMesh();
+    LoLXCylinder_logTop = new G4LogicalVolume(LoLXCylinderTop,DMaterials::Get_fPMMA(),"LoLXCylinder_logTop");
+    new G4PVPlacement(RotMat2,G4ThreeVector(0.,0.,15.0+1.0+2.3),LoLXCylinder_logTop,"LoLXCylinder_PhysicsTop",pMotherLogical,false,0,checkOverlaps);
+    new G4PVPlacement(RotMat,G4ThreeVector(0.,0.,-(15.0+1.0+2.3)),LoLXCylinder_logTop,"LoLXCylinder_PhysicsBottom",pMotherLogical,false,0,checkOverlaps);
+    
     G4double xenon_sizeXY = 19*mm; // was 19  and then 14
     G4double xenon_sizeZ  = 38*mm; // was 38  and then 31
     G4double Package_sizeXY = 15*mm;  // size of the  MPPC package initially made from Xenon.
@@ -62,7 +90,6 @@ LXeMainVolume_Cylindrical::LXeMainVolume_Cylindrical(G4RotationMatrix *pRot,cons
     G4double Package_border = 1.5*mm; // this is the size of the border that is left by the indent
                                       // in the ceramic holding structure.
     G4double Window_gap_scaler = 0.5; // normall 1.5 how much larger the distance from the edge of the Packagelogic will be compared to the Package_border
-    bool checkOverlaps = true;
     
     G4double Value_XY = xenon_sizeXY/2. + Package_sizeZ/2.;
     G4double Value_Z = xenon_sizeZ/2.;
@@ -75,7 +102,9 @@ LXeMainVolume_Cylindrical::LXeMainVolume_Cylindrical(G4RotationMatrix *pRot,cons
     G4double Window_sizeZ = 0.97*mm;
 
     MPPCVolume *SiPM_volume = new MPPCVolume();
-    FilterVolume *filter_volume = new FilterVolume(Package_sizeXY-Window_gap_scaler*Package_border,Window_sizeZ,true);
+    double filterthickness = 0.97*mm;
+    double filterwidth = 13.4*mm;
+    FilterVolume *filter_volume = new FilterVolume(filterwidth,filterthickness,false);
 
     std::vector<G4double> theta;
     std::vector<G4double> phi;
@@ -85,17 +114,19 @@ LXeMainVolume_Cylindrical::LXeMainVolume_Cylindrical(G4RotationMatrix *pRot,cons
     std::vector<bool> hasfilter;
     
     G4ThreeVector vert[2];
-    vert[0] = G4ThreeVector(0.0,0.0,(Package_sizeXY+gap)/2.);
-    vert[1] = G4ThreeVector(0.0,0.0,-(Package_sizeXY+gap)/2.);
+    vert[0] = G4ThreeVector(0.0,0.0,7.85);
+    vert[1] = G4ThreeVector(0.0,0.0,-7.85);
+    
+    double toprot = -pi*(22.5/180.);
     
     G4ThreeVector quad[4];
-    quad[0] = G4ThreeVector( (Package_sizeXY+gap)/2., (Package_sizeXY+gap)/2.,0.0);
-    quad[1] = G4ThreeVector( (Package_sizeXY+gap)/2.,-(Package_sizeXY+gap)/2.,0.0);
-    quad[2] = G4ThreeVector(-(Package_sizeXY+gap)/2., (Package_sizeXY+gap)/2.,0.0);
-    quad[3] = G4ThreeVector(-(Package_sizeXY+gap)/2., -(Package_sizeXY+gap)/2.,0.0);
+    quad[0] = G4ThreeVector( 7.85, 7.85,0.0);
+    quad[1] = G4ThreeVector( 7.85,-7.85,0.0);
+    quad[2] = G4ThreeVector(-7.85, 7.85,0.0);
+    quad[3] = G4ThreeVector(-7.85, -7.85,0.0);
     
     //Put this in lookup file
-    G4double rad_temp = (Package_sizeXY+gap)*sqrt(2);
+    G4double rad_temp = 20.52*mm + SiPM_volume->GetTopFace()+0.1;
     rad.push_back(rad_temp); phi.push_back(0.0); theta.push_back(pi/2.); hasfilter.push_back(true);
     rad.push_back(rad_temp); phi.push_back(0.0); theta.push_back(pi/2.); hasfilter.push_back(true);
     rad.push_back(rad_temp); phi.push_back(pi/4.); theta.push_back(pi/2.); hasfilter.push_back(true);
@@ -113,31 +144,35 @@ LXeMainVolume_Cylindrical::LXeMainVolume_Cylindrical(G4RotationMatrix *pRot,cons
     rad.push_back(rad_temp); phi.push_back(7.*pi/4.); theta.push_back(pi/2.); hasfilter.push_back(true);
     rad.push_back(rad_temp); phi.push_back(7.*pi/4.); theta.push_back(pi/2.); hasfilter.push_back(true);
     //rad_temp = zoffset*2+0.5*mm+Package_sizeZ/2.;
-    rad_temp = Package_sizeXY+Window_sizeZ+Package_sizeZ/2.+gap;
-    rad.push_back(rad_temp); phi.push_back(0.0); theta.push_back(0.0); hasfilter.push_back(true);
-    rad.push_back(rad_temp); phi.push_back(0.0); theta.push_back(0.0); hasfilter.push_back(true);
-    rad.push_back(rad_temp); phi.push_back(0.0); theta.push_back(0.0); hasfilter.push_back(true);
-    rad.push_back(rad_temp); phi.push_back(0.0); theta.push_back(0.0); hasfilter.push_back(true);
-    rad.push_back(rad_temp); phi.push_back(0.0); theta.push_back(pi); hasfilter.push_back(false);
-    rad.push_back(rad_temp); phi.push_back(0.0); theta.push_back(pi); hasfilter.push_back(true);
-    rad.push_back(rad_temp); phi.push_back(0.0); theta.push_back(pi); hasfilter.push_back(true);
-    rad.push_back(rad_temp); phi.push_back(0.0); theta.push_back(pi); hasfilter.push_back(true);
+    rad_temp = 18.0*mm + SiPM_volume->GetTopFace()+0.2;
+    rad.push_back(rad_temp); phi.push_back(toprot); theta.push_back(0.0); hasfilter.push_back(true);
+    rad.push_back(rad_temp); phi.push_back(toprot); theta.push_back(0.0); hasfilter.push_back(true);
+    rad.push_back(rad_temp); phi.push_back(toprot); theta.push_back(0.0); hasfilter.push_back(true);
+    rad.push_back(rad_temp); phi.push_back(toprot); theta.push_back(0.0); hasfilter.push_back(true);
+    rad.push_back(rad_temp); phi.push_back(toprot); theta.push_back(pi); hasfilter.push_back(false);
+    rad.push_back(rad_temp); phi.push_back(toprot); theta.push_back(pi); hasfilter.push_back(true);
+    rad.push_back(rad_temp); phi.push_back(toprot); theta.push_back(pi); hasfilter.push_back(true);
+    rad.push_back(rad_temp); phi.push_back(toprot); theta.push_back(pi); hasfilter.push_back(true);
 
     for(int i=0; i<24; ++i){
         double x = TMath::Sin(theta[i])*TMath::Cos(phi[i]);
         double y = TMath::Sin(theta[i])*TMath::Sin(phi[i]);
         double z = TMath::Cos(theta[i]);
-	double sink = -0.0*mm;
+        double sink = -0.0*mm;
         if(i<16){
             double radius = rad[i];
             pos_sipm.push_back(G4ThreeVector(x*radius+vert[i%2].x(),y*radius+vert[i%2].y(),z*radius+vert[i%2].z()));
-            radius -=  SiPM_volume->GetTopFace() + Window_sizeZ/2.0+sink;
+            radius -=  SiPM_volume->GetTopFace() + Window_sizeZ/2.0;
             pos_filter.push_back(G4ThreeVector(x*radius+vert[i%2].x(),y*radius+vert[i%2].y(),z*radius+vert[i%2].z()));
         }else{
             double radius = rad[i];
-            pos_sipm.push_back(G4ThreeVector(x*radius+quad[i%4].x(),y*radius+quad[i%4].y(),z*radius+quad[i%4].z()));
+            TVector3 pos = TVector3(x*radius+quad[i%4].x(),y*radius+quad[i%4].y(),z*radius+quad[i%4].z());
+            pos.Rotate(toprot,TVector3(0.0,0.0,1.0));
+            pos_sipm.push_back(G4ThreeVector(pos.x(),pos.y(),pos.z()));
             radius -= SiPM_volume->GetTopFace() + Window_sizeZ/2.0+sink;
-            pos_filter.push_back(G4ThreeVector(x*radius+quad[i%4].x(),y*radius+quad[i%4].y(),z*radius+quad[i%4].z()));
+            pos = TVector3(x*radius+quad[i%4].x(),y*radius+quad[i%4].y(),z*radius+quad[i%4].z());
+            pos.Rotate(toprot,TVector3(0.0,0.0,1.0));
+            pos_filter.push_back(G4ThreeVector(pos.x(),pos.y(),pos.z()));
         }
     }
     
@@ -164,10 +199,14 @@ LXeMainVolume_Cylindrical::LXeMainVolume_Cylindrical(G4RotationMatrix *pRot,cons
     }
 
     SiPM_volume->GetChipLogicVolume()->SetSensitiveDetector(SiPM_SD);
+    SurfaceProperties();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void LXeMainVolume_Cylindrical::SurfaceProperties(){
-  return;
+    //put in proper tables.
+    G4OpticalSurface* pmma_opsurf= new G4OpticalSurface("pmma_opsurf",glisur,ground,dielectric_dielectric);
+    new G4LogicalSkinSurface("pmma_surf",LoLXCylinder_logSide,pmma_opsurf);
+    new G4LogicalSkinSurface("pmma_surf",LoLXCylinder_logTop,pmma_opsurf);
 }

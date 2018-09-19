@@ -35,6 +35,7 @@ class LXeMaterials
     G4Material* fe_mat;
     G4Material* silicon_mat;
     G4Material* quartz_mat;
+    G4Material* opaque;
 
   private:
 
@@ -67,6 +68,7 @@ G4Material* Get_fQuartz();
 G4Material* Get_fe_mat();
 G4Material* Get_silicon_mat();
 G4Material* Get_quartz_mat();
+G4Material* Get_opaque();
 }
 
 #endif

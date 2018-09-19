@@ -32,12 +32,21 @@
 
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcmdWithAString.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 LXePrimaryGeneratorMessenger::LXePrimaryGeneratorMessenger(LXePrimaryGeneratorAction* event)
  : fLXePrimaryGenerator(event)
 {
+    fGeneratorDir = new G4UIdirectory("/LXe/gen/");
+    fGeneratorDir->SetGuidance("Detector Event Generator Control");
+    
+    fSetGenCmd = new G4UIcmdWithAString("/LXe/gen/set",this);
+    fSetGenCmd->SetGuidance("Set generator.");
+    
+    fSetGeoCmd = new G4UIcmdWithAnInteger("/LXe/gen/geoset",this);
+    fSetGeoCmd->SetGuidance("Set geometry in generator.");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -48,4 +57,11 @@ LXePrimaryGeneratorMessenger::~LXePrimaryGeneratorMessenger(){
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void LXePrimaryGeneratorMessenger::SetNewValue(G4UIcommand* command, G4String newValue){
+    
+    if( command == fSetGenCmd ){
+        fLXePrimaryGenerator->Set_generator(newValue);
+    }else if(command == fSetGeoCmd){
+        fLXePrimaryGenerator->SetGeometry(fSetGeoCmd->GetNewIntValue(newValue));
+    }
+    
 }

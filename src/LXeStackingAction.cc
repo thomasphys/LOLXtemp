@@ -64,25 +64,14 @@ LXeStackingAction::ClassifyNewTrack(const G4Track * aTrack){
       // particle is secondary
       if(aTrack->GetCreatorProcess()->GetProcessName()=="Scintillation")
         eventInformation->IncPhotonCount_Scint();
-      else if(aTrack->GetCreatorProcess()->GetProcessName()=="Cerenkov")
+      else if(aTrack->GetCreatorProcess()->GetProcessName()=="Cerenkov"){
         eventInformation->IncPhotonCount_Ceren();
-        G4int parentID = aTrack->GetParentID();
-	G4TrajectoryContainer* container = G4RunManager::GetRunManager()->GetCurrentEvent()->GetTrajectoryContainer();
-	size_t nTraj = container->size();
-	G4double kE = 1200000.;
-  	//for(size_t i=0;i<nTraj;i++){
-    	//	LXeTrajectory* tr1 = (LXeTrajectory*)((*container)[i]);
-    	//	if(tr1->GetTrackID()==parentID){
-	//		kE = tr1->GetInitialKineticEnergy();
-	//	       	break;
-	//	}
-  	//}
-	//printf("cherenkov photon with energy %f\n",aTrack->GetTotalEnergy());
-        eventInformation->AddPhotonEnergy(aTrack->GetTotalEnergy(),kE);
+        //printf("Cherenkov Photon %d %f \n",eventInformation->GetPhotonCount_Ceren(),aTrack->GetDynamicParticle()->GetTotalEnergy()/eV);
+        eventInformation->AddPhotonEnergy(aTrack->GetDynamicParticle()->GetTotalEnergy()/eV);
+      }
     }
   }
-  else{
-  }
+  
   return fUrgent;
 }
 

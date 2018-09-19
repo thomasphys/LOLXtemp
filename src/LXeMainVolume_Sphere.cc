@@ -58,10 +58,10 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
     FilterVolume *filter_volume = new FilterVolume(filterwidth,filterthickness,false);
     
     double SiPMholder_r = 28.355044*mm + SiPM_volume->GetTopFace()+0.1;
-    G4ThreeVector sphereshift = G4ThreeVector(0.,0.,0.);
+    G4ThreeVector sphereshift = G4ThreeVector(-32.35*mm,-32.35*mm,-32.35*mm);
     if(version == 2){
         SiPMholder_r += 0.00*mm;
-        sphereshift = G4ThreeVector(-5.*mm,-5.*mm,-5.*mm);
+        sphereshift = G4ThreeVector(-37.35*mm,-37.35*mm,-37.35*mm);
     }
     double filter_r = SiPMholder_r - SiPM_volume->GetTopFace() -  filterthickness/2.0;
     
@@ -117,10 +117,10 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
                                            filter_r*TMath::Cos(theta[i])));
     }
  
-    CADMesh * mesh = new CADMesh(Form("%s/LoLXSphere%d.stl",std::getenv("LOLXSTLDIR"),version),mm,G4ThreeVector(-32.35,-32.35,-32.35),false);
+    CADMesh * mesh = new CADMesh(Form("%s/LoLXSphere%d.stl",std::getenv("LOLXSTLDIR"),version),mm,sphereshift,false);
     LoLXSphere = mesh->TessellatedMesh();
     LoLXSphere_log = new G4LogicalVolume(LoLXSphere,DMaterials::Get_fPMMA(),"LoLXSphere_log");
-    new G4PVPlacement(0,sphereshift,LoLXSphere_log,"LoLXSphere_Physics",pMotherLogical,false,0);
+    new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),LoLXSphere_log,"LoLXSphere_Physics",pMotherLogical,false,0);
  
     //***********Arrange pmts around the outside of housing**********
     //---pmt sensitive detector
@@ -162,7 +162,7 @@ LXeMainVolume_Sphere::LXeMainVolume_Sphere(G4RotationMatrix *pRot,const G4ThreeV
 
 void LXeMainVolume_Sphere::SurfaceProperties(){
   //put in proper tables.
-  G4OpticalSurface* pmma_opsurf= new G4OpticalSurface("sipm_opsurf",glisur,ground,dielectric_dielectric);
+  G4OpticalSurface* pmma_opsurf= new G4OpticalSurface("pmma_opsurf",glisur,ground,dielectric_dielectric);
   new G4LogicalSkinSurface("pmma_surf",LoLXSphere_log,pmma_opsurf);
   
 }

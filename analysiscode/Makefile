@@ -2,30 +2,35 @@ ROOTLIBS      = $(shell $(ROOTSYS)/bin/root-config --libs) -lm -ldl
 ROOTGLIBS     = $(shell $(ROOTSYS)/bin/root-config --glibs) -lm -ldl
 
 #ARCH          = -m32
-OPT           = -O2 -march=amdfam10 -mfpmath=sse -lgomp
-CXX           = /usr/bin/g++
-CXXFLAGS      = -Wall $(OPT) $(ARCH) -fPIC
-INCS          =  -I$(ROOTSYS)/include  -I../ds
-LD            = /usr/bin/g++
+OPT           = -O2 -march=amdfam10 -mfpmath=sse
+CXXFLAGS      = -Wall $(OPT) $(ARCH) -fPIC -std=c++11
+INCS          =  -I$(ROOTSYS)/include  -I../ds -I../include
+LD            =/usr/bin/g++
 LDFLAGS       = $(OPT)
 SOFLAGS       = -Wl,-soname -shared 
 LIB_EXTRA     = 
 LIBS          = $(ROOTGLIBS) $(LIB_EXTRA) -L/usr/X11R6/lib -lXpm -lX11
 LOCALLIB = ../ds/libEvent.so
 
-exe:   ProcessRun EventDisplay EventDisplay_Cyl
+exe:   ProcessRun EventDisplay EventDisplay_Cyl LXeElectronCherenkov
 
 %.o:	%.cxx
-	$(CXX) -c $(INCS) $(CXXFLAGS) $<
+	$(LD) -c $(INCS) $(CXXFLAGS) $<
 
 %.o:	%.C
-	$(CXX) -c $(INCS) $(CXXFLAGS) $<
+	$(LD) -c $(INCS) $(CXXFLAGS) $<
+
+LOLXReadData.o: ../src/LOLXReadData.cc
+	$(LD) -c $(INCS) $(CXXFLAGS) $<
 
 EventDisplay_Cyl: EventDisplay_Cyl.o
-	$(LD) $(LDFLAGS) -o EventDisplay_Cyl EventDisplay_Cyl.o $(LIBS) $(LOCALLIB)
+	$(LD) $(LDFLAGS) -o $@ $^ $(LIBS) $(LOCALLIB)
 
 EventDisplay: EventDisplay.o
-	$(LD) $(LDFLAGS) -o EventDisplay EventDisplay.o $(LIBS) $(LOCALLIB)
+	$(LD) $(LDFLAGS) -o $@ $^ $(LIBS) $(LOCALLIB)
 
-ProcessRun: ProcessRun.o
-	$(LD) $(LDFLAGS) -o ProcessRun ProcessRun.o $(LIBS) $(LOCALLIB)
+ProcessRun: ProcessRun.o LOLXReadData.o
+	$(LD) $(LDFLAGS) -o $@ $^ $(LIBS) $(LOCALLIB) $(INCS)
+
+LXeElectronCherenkov: LXeElectronCherenkov.o LOLXReadData.o
+	$(LD) $(LDFLAGS) -o $@ $^ $(LIBS) $(LOCALLIB) $(INCS)

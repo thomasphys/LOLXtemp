@@ -31,7 +31,8 @@
 
 #include "globals.hh"
 #include "G4UserSteppingAction.hh"
-
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4OpBoundaryProcess.hh"
 
 class LXeRecorderBase;

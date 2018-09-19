@@ -55,7 +55,7 @@ class LXeUserEventInformation : public G4VUserEventInformation
     void SetConvPos(const G4ThreeVector& p){fConvPos=p;fConvPosSet=true;}
     void SetPosMax(const G4ThreeVector& p,G4double edep){fPosMax=p;fEdepMax=edep;}
 
-    void AddPhotonEnergy(G4double _energy, G4double _electronMomentum){cherenkov_photon_energy.push_back(_energy); electron_momentum.push_back(_electronMomentum);} 
+    void AddPhotonEnergy(G4double _energy){cherenkov_photon_energy.push_back(_energy);} 
     int GetCherenkovSamples(){return (int)cherenkov_photon_energy.size();}
     G4double GetCherenkovPhotonEnergy(int i){return cherenkov_photon_energy[i];}
     G4double GetElectronMomentum(int i){return electron_momentum[i];}

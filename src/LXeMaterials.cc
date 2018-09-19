@@ -44,6 +44,7 @@
 #include "G4UImanager.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
+#include "LOLXReadData.hh"
 
 #include "TMath.h"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -78,25 +79,24 @@ LXeMaterials::LXeMaterials()
   G4double nm2ev = 1240.;
   
   G4Material* fLXe = nist->FindOrBuildMaterial("G4_lXe");
-  const G4int NUMENTRIES1 = 850;  //from 150 to 1000
+  const G4int NUMENTRIES1 = 848;  //from 100 to 1000
   G4double LXe_PP1[NUMENTRIES1];  //energies
   G4double LXe_SCINT1[NUMENTRIES1]; //emission probability
   G4double LXe_RIND1[NUMENTRIES1]; // Refraction index
   G4double LXe_ABSL1[NUMENTRIES1]; // Absorption length
   G4double LXe_Rayleigh1[NUMENTRIES1]; // Rayleigh scattering length
   // defining properties of LiXe
+    
   for(int iE=0; iE<NUMENTRIES1; iE++){
-    G4double WL=1000-(iE); // starting from 1000nm WL, ending with 150nm
+      G4double WL=1000-(iE); // starting from 1000nm WL, ending with 150nm
+      G4double en=nm2ev/(WL); // tabulate energy
 
-    LXe_PP1[iE]=nm2ev/(WL)*eV; // tabulate energy
-    LXe_SCINT1[iE] = 1./sqrt(2*3.14)/5.*exp(-pow((WL-178.)/5.,2.)/2.);//approximating with a gaus (178,5)
-    //from https://arxiv.org/pdf/1502.04213.pdf  AS Feb 21, 2018
-    LXe_RIND1[iE] = sqrt(1.5+ 0.38*WL*WL/(WL*WL-146.9*146.9)+ 0.009*WL*WL/(WL*WL-827*827));
-    if(WL>700) LXe_RIND1[iE]=1.365;// avoid the fall of ref index in the formula
-    if(WL<147.) LXe_RIND1[iE]= sqrt(1.5+ 0.38*147.*147./(147.*147.-146.9*146.9)+ 0.009*147.*147./(147.*147.-827*827));
-    LXe_ABSL1[iE] = 200.*cm;
-    LXe_Rayleigh1[iE] = 35.*cm; // need to code proper formula but should not be critical for LoLX
-    //G4cout << " WL= " << WL<< " and energy="<<LXe_PP1[iE]<< " iE="<<iE<<G4endl; //debug output
+      LXe_SCINT1[iE] = LOLXReadData::GetXenon_Scintillation(en);
+      LXe_RIND1[iE] = LOLXReadData::GetXenon_n_stitch(en);
+      printf("wl = %f en = %f n = %f\n",WL,en,LXe_RIND1[iE]);
+      LXe_ABSL1[iE] = LOLXReadData::GetXenon_Absorption(en)*cm;
+      LXe_Rayleigh1[iE] = LOLXReadData::GetXenon_Rayleigh(en)*cm;
+      LXe_PP1[iE]=en*eV;
   }
     
   G4MaterialPropertiesTable* LXe_MPT = new G4MaterialPropertiesTable();
@@ -108,9 +108,9 @@ LXeMaterials::LXeMaterials()
   LXe_MPT -> AddConstProperty("RESOLUTIONSCALE", 1.0);
   LXe_MPT -> AddConstProperty ("SCINTILLATIONYIELD",46300/MeV);// 46300 was 68000 was 100 before should be 46296, based on 21.6 eV for Beta or 17.9 eV for alpha
   //LXe_MPT -> AddConstProperty ("SCINTILLATIONYIELD",0.0/MeV);
-  LXe_MPT -> AddConstProperty("FASTTIMECONSTANT",2.2*ns); // from http://www.pd.infn.it/~conti/images/LXe/tabellatau.pdf
-  LXe_MPT -> AddConstProperty("SLOWTIMECONSTANT",34.*ns);
-  LXe_MPT -> AddConstProperty("YIELDRATIO",.5); // fraction of fast to slow components
+  LXe_MPT -> AddConstProperty("FASTTIMECONSTANT",4.2*ns);
+  LXe_MPT -> AddConstProperty("SLOWTIMECONSTANT",45.*ns);
+  LXe_MPT -> AddConstProperty("YIELDRATIO",.05); // fraction of fast to slow components
 
   fLXe -> SetMaterialPropertiesTable(LXe_MPT);
   //LXe->GetIonisation()->SetBirksConstant(0.126*mm/MeV); //no saturation 
@@ -351,4 +351,5 @@ G4Material* Get_fQuartz(){BuildMaterials(); return DetectorMaterials->fQuartz;}
 G4Material* Get_fe_mat(){BuildMaterials(); return DetectorMaterials->fe_mat;}
 G4Material* Get_silicon_mat(){BuildMaterials(); return DetectorMaterials->silicon_mat;}
 G4Material* Get_quartz_mat(){BuildMaterials(); return DetectorMaterials->quartz_mat;}
+G4Material* Get_opaque(){BuildMaterials(); return DetectorMaterials->opaque;}
 }

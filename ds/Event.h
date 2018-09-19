@@ -13,14 +13,14 @@
 		{
 			public:
 			Event() : TObject() { Init(); }
-      			Event(const Event &rhs) : TObject(rhs) { Init(); CopyObj(rhs); }
-      			virtual ~Event() { Destroy(); }
-      			virtual Event &operator=(const Event &rhs) {TObject::operator=(rhs); CopyObj(rhs); return *this; }
+            Event(const Event &rhs) : TObject(rhs) { Init(); CopyObj(rhs); }
+            virtual ~Event() { Destroy(); }
+            virtual Event &operator=(const Event &rhs) {TObject::operator=(rhs); CopyObj(rhs); return *this; }
 
-      			/// Clone this object. This overrides the default ROOT TObject::Clone,
-      			//  as that version corrupts old QT and Pulse objects.
-      			virtual TObject* Clone(const char* opt = "") const { (void)opt; return new Event(*this); }
-      			virtual void Clear(Option_t* = "") { Destroy(); Init(); }	
+            /// Clone this object. This overrides the default ROOT TObject::Clone,
+            //  as that version corrupts old QT and Pulse objects.
+            virtual TObject* Clone(const char* opt = "") const { (void)opt; return new Event(*this); }
+            virtual void Clear(Option_t* = "") { Destroy(); Init(); }
 			
 			void SetSensorNum(int nsens){PhotoSensors = std::vector<MPPC*>(nsens,new MPPC());}
 			
@@ -32,13 +32,13 @@
 			void SetMCSintillation(int _MCSintillation){MCSintillation = _MCSintillation;}
 			int GetMCSintillation(){return MCSintillation;}
 			void SetMCCherenkov(int _MCCherenkov){MCCherenkov = _MCCherenkov;}
-                        int GetMCCherenkov(){return MCCherenkov;}
+            int GetMCCherenkov(){return MCCherenkov;}
 
-			void AddCherenkovWavelength(double _wl){CherenkovWavelength.push_back(_wl);}
-                        void AddElectronBeta(double _beta){ElectronBeta.push_back(_beta);}
+            void AddCherenkovWavelength(double _wl){CherenkovWavelength.push_back(_wl);}
+            void AddElectronBeta(double _beta){ElectronBeta.push_back(_beta);}
 			int GetCherenkovSpectrumCount(){return (int)CherenkovWavelength.size();}
-			double GetCherenkovWavelength(int i){CherenkovWavelength[i];}
-                        double GetElectronBeta(int i){ElectronBeta[i];}
+			double GetCherenkovWavelength(int i){return CherenkovWavelength[i];}
+            double GetElectronBeta(int i){return ElectronBeta[i];}
 
             ClassDef(Event,1);
 
@@ -47,6 +47,9 @@
 			void Init()
 			{
 				eventseed = 0;
+                PhotoSensors.resize(0);
+                ElectronBeta.resize(0);
+                CherenkovWavelength.resize(0);
 			}
 
 			void Destroy()

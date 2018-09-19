@@ -32,11 +32,26 @@ FilterVolume::FilterVolume(G4double Window_sizeXY,G4double Window_sizeZ,bool boa
     	G4Box* box2 = new G4Box("Box2",(Window_sizeXY+Package_border)/2.,(Window_sizeXY+Package_border)/2.,Window_sizeZ/2.);
     	G4ThreeVector  translation(0.0,0.0,0.0);
     	G4SubtractionSolid* b1minusb2 = new G4SubtractionSolid("box1-box2",box2,box1,0,translation);
-	G4LogicalVolume* Boarderlogic = new G4LogicalVolume(b1minusb2, DMaterials::Get_fPMMA(), "boarderlog");
-	new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),Boarderlogic,"boarder",this,0,checkOverlaps);
+       G4LogicalVolume* Boarderlogic = new G4LogicalVolume(b1minusb2, DMaterials::Get_fPMMA(), "boarderlog");
+       new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),Boarderlogic,"boarder",this,0,checkOverlaps);
 
-	G4OpticalSurface* pmma_opsurf= new G4OpticalSurface("sipm_opsurf",glisur,ground,dielectric_dielectric);
-  	new G4LogicalSkinSurface("pmma_surf",Boarderlogic,pmma_opsurf);
+       G4OpticalSurface* pmma_opsurf= new G4OpticalSurface("sipm_opsurf",glisur,ground,dielectric_dielectric);
+       G4double energy[2]={0.0,26.0};
+       G4double reflectivity[2] = {0.0,0.0};
+       G4double efficiency[2] = {0.0,0.0};
+       
+       G4MaterialPropertiesTable* BoarderTable = new G4MaterialPropertiesTable();
+       BoarderTable->AddProperty("REFLECTIVITY",energy,reflectivity,2);
+       BoarderTable->AddProperty("EFFICIENCY",energy,efficiency,2);
+       pmma_opsurf->SetMaterialPropertiesTable(BoarderTable);
+       
+       new G4LogicalSkinSurface("pmma_surf",Boarderlogic,pmma_opsurf);
+       
+       G4OpticalSurface* OpMPPCSurface = new G4OpticalSurface("OpMPPCSurface");
+       OpMPPCSurface->SetModel(glisur); //glisur
+       OpMPPCSurface->SetType(dielectric_metal); //_metal
+       OpMPPCSurface->SetFinish(polished);
+       
     }
 
     G4OpticalSurface* OpSurface = new G4OpticalSurface("name");

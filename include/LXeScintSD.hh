@@ -31,7 +31,8 @@
 #define LXeScintSD_h 1
 
 #include "LXeScintHit.hh"
-
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4VSensitiveDetector.hh"
 
 class G4Step;

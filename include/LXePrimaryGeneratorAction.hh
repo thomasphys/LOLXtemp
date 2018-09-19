@@ -31,6 +31,7 @@
 #define LXePrimaryGeneratorAction_h 1
 
 #include "G4VUserPrimaryGeneratorAction.hh"
+#include "G4GeneralParticleSource.hh"
 #include "G4Event.hh"
 #include "G4ParticleGun.hh"
 #include "G4ParticleTable.hh"
@@ -40,6 +41,9 @@
 #include "TRandom3.h"
 #include "TMath.h"
 #include <vector>
+#include "LXeDetectorConstruction.hh"
+#include "LXePrimaryGeneratorMessenger.hh"
+#include "G4Navigator.hh"
 
 class G4ParticleGun;
 class G4Event;
@@ -54,20 +58,63 @@ class LXePrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
   public:
 
     virtual void GeneratePrimaries(G4Event* anEvent);
+    void Set_generator(G4String generator);
+    void Set_nCaptureXe_Method(G4String method);
+    void Set_Xe_Component(G4String component);
+    void Set_bb2n_CutOffMin(G4double frac);
+    void Set_bb2n_CutOffMax(G4double frac);
+    void Set_GenInCenter(G4bool b);
+    void SetRandDimensions();
+    void GetIsotropicDirection(G4ThreeVector& pos);
+    void GetUnifRandPosInLXe(G4ThreeVector& pos);
+    void Generate_bb0n(G4Event* anEvent);
+    G4double D_bb0n_spectral_max(G4double k);
+    G4double D_bb0n_spectrum(G4double k, G4double d);
+    G4double Fermi_function(G4int z, G4double ke);
+    void Generate_bb2n(G4Event* anEvent);
+    G4double BB2n_sum_spectrum(G4double k);
+    G4double D_spectrum(G4double k, G4double d);
+    G4double SimpsonsRule(G4double x0, G4double xn,G4int n, G4double f[]);
+    void Set_norm();
+    void Generate_nCaptureXe136(G4Event* anEvent);
+    void SetGeometry(G4int _geometry){fGeometry = _geometry;}
+    void Generate_singleelec(G4Event* anEvent);
 
   private:
 
     int eventmode;
     int seed;
     bool loadbetadecay;
+    G4String fnCaptureXe_Method;
+    G4String fXeComponent;
     void GenerateDoubleBetaDecay(G4Event* anEvent);
     G4double GetEnergyFraction(double rand);
     std::vector<double> dbetaenergysplit;
     TRandom3 *rand;
-    G4ParticleGun* fParticleGun;
-    G4ParticleGun* fDBetaParticleGun1;
-    G4ParticleGun* fDBetaParticleGun2;
-
+    G4ParticleGun* fParticleGun1;
+    G4ParticleGun* fParticleGun3;
+    G4GeneralParticleSource* fParticleGun2;
+    G4double fB8NeutrinoMaxEnergy;
+    G4double fB8NeutrinoMaxY;
+    G4double fB8NeutrinoBinWidth;
+    G4int fCuIsotope;
+    G4double fBb2nCutOffMinFraction;
+    G4double fBb2nCutOffMaxFraction;
+    G4bool fGenInCenter;
+    G4double fRandPos;
+    G4double fRandHalfLength;
+    G4double fRandRadius;
+    G4double electron_mass_c2;
+    G4double fQ_value;
+    G4double fD_spectral_max;
+    G4double fFF_factor;
+    G4double fNormalization;
+    G4double fK_spectral_max;
+    G4String fGenerator;
+    LXePrimaryGeneratorMessenger *fMessenger;
+    G4Navigator* theNavigator;
+    G4double fGeometry;
+    
 };
 
 #endif

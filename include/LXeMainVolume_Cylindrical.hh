@@ -54,6 +54,13 @@ class LXeMainVolume_Cylindrical //: public G4PVPlacement
   private:
 
     void SurfaceProperties();
+    G4VSolid* LoLXCylinder;
+    G4LogicalVolume* LoLXCylinder_log;
+    
+    G4VSolid* LoLXCylinderSide;
+    G4LogicalVolume* LoLXCylinder_logSide;
+    G4VSolid* LoLXCylinderTop;
+    G4LogicalVolume* LoLXCylinder_logTop;
 
     G4bool fUpdated;
     

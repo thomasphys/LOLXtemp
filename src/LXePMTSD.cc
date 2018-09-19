@@ -117,7 +117,7 @@ G4bool LXePMTSD::ProcessHits_constStep(const G4Step* aStep,
   }
 
   hit->IncPhotonCount(); //increment hit for the selected pmt
-  hit->AddHitTime(aStep->GetTrack()->GetGlobalTime()); // or Local????
+  hit->AddHitTime(aStep->GetTrack()->GetGlobalTime()/ns); // or Local????
 
   if(aStep->GetTrack()->GetCreatorProcess()->GetProcessName()=="Scintillation") hit->AddHitProcess(1);
   else if(aStep->GetTrack()->GetCreatorProcess()->GetProcessName()=="Cerenkov") hit->AddHitProcess(0);

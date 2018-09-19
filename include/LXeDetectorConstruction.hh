@@ -127,7 +127,6 @@ class LXeDetectorConstruction : public G4VUserDetectorConstruction
     G4double fRefl;
     G4bool fMainVolume;
     G4int fGeometry;
-
     G4MaterialPropertiesTable* fLXe_mt;
     static LXeScintSD* fScint_SD;
 

@@ -153,10 +153,10 @@ void LXeSteppingAction::UserSteppingAction(const G4Step * theStep){
     boundaryStatus=boundary->GetStatus();
  
     //Check to see if the partcile was actually at a boundary
-    //Otherwise the boundary status may not be valid
-    //Prior to Geant4.6.0-p1 this would not have been enough to check
+      //Otherwise the boundary status may not be valid
     if(thePostPoint->GetStepStatus()==fGeomBoundary){
-      if(fExpectedNextStatus==StepTooSmall){
+        //Figure out what this does!!!!!
+/*      if(fExpectedNextStatus==StepTooSmall){
         if(boundaryStatus!=StepTooSmall){
           G4ExceptionDescription ed;
           ed << "LXeSteppingAction::UserSteppingAction(): "
@@ -166,7 +166,8 @@ void LXeSteppingAction::UserSteppingAction(const G4Step * theStep){
           FatalException,ed,
           "Something is wrong with the surface normal or geometry");
         }
-      }
+      }*/
+
       fExpectedNextStatus=Undefined;
       // if(boundaryStatus==14)boundaryStatus=Detection;
       switch(boundaryStatus){
@@ -185,6 +186,7 @@ void LXeSteppingAction::UserSteppingAction(const G4Step * theStep){
         LXePMTSD* pmtSD = (LXePMTSD*)SDman->FindSensitiveDetector(sdName);
         if(pmtSD)pmtSD->ProcessHits_constStep(theStep,NULL);
         trackInformation->AddTrackStatusFlag(hitPMT);
+            //printf("detected photon\n");
         break;
         }
       case FresnelReflection:

@@ -1,4 +1,4 @@
-/LXe/detector/sphere 1
+#/LXe/detector/sphere 2
 
 /run/initialize
 /control/verbose 0
@@ -7,8 +7,12 @@
 /tracking/verbose 0
 /grdm/verbose 0
 
-/gun/particle ion
-/gun/ion 38 90 # Sr90
-/gun/position 0.0 0.0 0.0 mm
-/gun/direction 0.0 0.0 1.0
-/run/beamOn 1000
+#/LXe/gen/set gun
+#/LXe/gen/geoset 0
+#/gun/particle ion
+#/gun/ion 38 90 # Sr90
+#/LXe/gen/set bb2n
+/LXe/gen/set bb0n
+#/gun/position 0.0 0.0 0.0 mm
+#/gun/direction 0.0 0.0 1.0
+/run/beamOn 1
