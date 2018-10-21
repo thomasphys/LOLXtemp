@@ -72,7 +72,7 @@ LXeMainVolume_Cylindrical::LXeMainVolume_Cylindrical(G4RotationMatrix *pRot,cons
     new G4PVPlacement(RotMat,G4ThreeVector(0.,0.,0.),LoLXCylinder_log,"LoLXCylinder_Physics",pMotherLogical,false,0);
 */
     
-    CADMesh * meshside = new CADMesh(Form("%s/SideOctagon.STL",std::getenv("LOLXSTLDIR"),1),mm,G4ThreeVector(-24.9,-16.0,-24.9),false);
+    CADMesh * meshside = new CADMesh(Form("%s/MiddleOctagon.STL",std::getenv("LOLXSTLDIR"),1),mm,G4ThreeVector(-24.9,-16.0,-24.9),false);
     LoLXCylinderSide = meshside->TessellatedMesh();
     LoLXCylinder_logSide = new G4LogicalVolume(LoLXCylinderSide,DMaterials::Get_fPMMA(),"LoLXCylinder_logSide");
     new G4PVPlacement(RotMat,G4ThreeVector(0.,0.,0.),LoLXCylinder_logSide,"LoLXCylinder_PhysicsSide",pMotherLogical,false,0,checkOverlaps);
@@ -81,7 +81,11 @@ LXeMainVolume_Cylindrical::LXeMainVolume_Cylindrical(G4RotationMatrix *pRot,cons
     LoLXCylinderTop = meshtop->TessellatedMesh();
     LoLXCylinder_logTop = new G4LogicalVolume(LoLXCylinderTop,DMaterials::Get_fPMMA(),"LoLXCylinder_logTop");
     new G4PVPlacement(RotMat2,G4ThreeVector(0.,0.,15.0+1.0+2.3),LoLXCylinder_logTop,"LoLXCylinder_PhysicsTop",pMotherLogical,false,0,checkOverlaps);
-    new G4PVPlacement(RotMat,G4ThreeVector(0.,0.,-(15.0+1.0+2.3)),LoLXCylinder_logTop,"LoLXCylinder_PhysicsBottom",pMotherLogical,false,0,checkOverlaps);
+    
+    CADMesh * meshbottom = new CADMesh(Form("%s/BottomOctagon.STL",std::getenv("LOLXSTLDIR"),1),mm,G4ThreeVector(-30.08,-2.25,-30.08),false);
+    LoLXCylinderTop = meshtop->TessellatedMesh();
+    LoLXCylinder_logTop = new G4LogicalVolume(LoLXCylinderTop,DMaterials::Get_fPMMA(),"LoLXCylinder_logTop");
+   // new G4PVPlacement(RotMat,G4ThreeVector(0.,0.,-(15.0+1.0+2.3)),LoLXCylinder_logTop,"LoLXCylinder_PhysicsBottom",pMotherLogical,false,0,checkOverlaps);
     
     G4double xenon_sizeXY = 19*mm; // was 19  and then 14
     G4double xenon_sizeZ  = 38*mm; // was 38  and then 31

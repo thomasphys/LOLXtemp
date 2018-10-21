@@ -39,7 +39,9 @@ include_directories(${PROJECT_SOURCE_DIR}/include
                     ${PROJECT_SOURCE_DIR}/ds
                     ${Geant4_INCLUDE_DIR}
                     ${ROOT_INCLUDE_DIRS}
-                    ${ROOTSYS}/include )
+                    ${ROOTSYS}/include
+                    /phys/CADMesh/include
+                    /phys/CADMesh/build/include)
 target_link_libraries(LXe ${Geant4_LIBRARIES})
 target_link_libraries(LXe ${cadmesh_LIBRARIES})
 target_link_libraries(LXe ${ROOT_LIBRARIES})
