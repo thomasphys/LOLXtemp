@@ -1,0 +1,12 @@
+/LXe/detector/sphere 2
+
+/run/initialize
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+/grdm/verbose 0
+
+/LXe/gen/set bb0n
+/LXe/gen/geoset 2
+/run/beamOn 1000

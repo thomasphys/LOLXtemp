@@ -1,0 +1,14 @@
+/LXe/detector/sphere 2
+
+/run/initialize
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+/grdm/verbose 0
+
+/gun/particle ion
+/gun/ion 84 210 # Po-210
+#/gun/position 0.0 0.0 0.0 mm
+#/gun/direction 0.0 0.0 1.0
+/run/beamOn 1000
