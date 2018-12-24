@@ -5,6 +5,7 @@
 #include <sstream>
 #include "TGraph.h"
 #include "TMath.h"
+#include <assert.h>
 
 namespace LOLXReadData{
     extern TGraph* PMMA_nREAL;

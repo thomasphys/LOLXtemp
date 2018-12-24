@@ -42,6 +42,8 @@
 #include "FilterVolume.hh"
 #include "MPPCVolume.hh"
 #include "G4SDManager.hh"
+#include <iostream>
+#include <fstream>
 
 class LXeMainVolume_Cylindrical //: public G4PVPlacement
 {
@@ -61,6 +63,8 @@ class LXeMainVolume_Cylindrical //: public G4PVPlacement
     G4LogicalVolume* LoLXCylinder_logSide;
     G4VSolid* LoLXCylinderTop;
     G4LogicalVolume* LoLXCylinder_logTop;
+    G4VSolid* LoLXCylinderBot;
+    G4LogicalVolume* LoLXCylinder_logBot;
 
     G4bool fUpdated;
     
