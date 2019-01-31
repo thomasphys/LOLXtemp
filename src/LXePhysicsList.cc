@@ -83,7 +83,7 @@ LXePhysicsList::LXePhysicsList()
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
 
    // Not required parameters are commented out
-  opticalPhysics->SetWLSTimeProfile("exponential");
+  //opticalPhysics->SetWLSTimeProfile("exponential");
   opticalPhysics->SetFiniteRiseTime(false);
   opticalPhysics->SetScintillationYieldFactor(1.0);// Percentage of scintillation light we actually produce
   opticalPhysics->SetScintillationExcitationRatio(0.0);

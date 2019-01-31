@@ -50,7 +50,7 @@ class LXePMTSD : public G4VSensitiveDetector
  
     //A version of processHits that keeps aStep constant
     G4bool ProcessHits_constStep(const G4Step* ,
-                                 G4TouchableHistory*, G4TrackVector*);
+                                 G4TouchableHistory* );
     virtual void EndOfEvent(G4HCofThisEvent* );
     virtual void clear();
     void DrawAll();
