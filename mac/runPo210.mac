@@ -1,4 +1,4 @@
-/LXe/detector/sphere 2
+#/LXe/detector/sphere 2
 
 /run/initialize
 /control/verbose 0

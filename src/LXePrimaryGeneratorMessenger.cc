@@ -23,63 +23,50 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file optical/LXe/include/LXePMTSD.hh
-/// \brief Definition of the LXePMTSD class
+/// \file optical/LXe/src/LXePrimaryGeneratorMessenger.cc
+/// \brief Implementation of the LXePrimaryGeneratorMessenger class
 //
 //
-#ifndef LXePMTSD_h
-#define LXePMTSD_h 1
+#include "LXePrimaryGeneratorMessenger.hh"
+#include "LXePrimaryGeneratorAction.hh"
 
-#include "G4DataVector.hh"
-#include "G4VSensitiveDetector.hh"
-#include "LXePMTHit.hh"
+#include "G4UIcmdWithABool.hh"
+#include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcmdWithAString.hh"
 
-class G4Step;
-class G4HCofThisEvent;
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class LXePMTSD : public G4VSensitiveDetector
+LXePrimaryGeneratorMessenger::LXePrimaryGeneratorMessenger(LXePrimaryGeneratorAction* event)
+ : fLXePrimaryGenerator(event)
 {
+    fGeneratorDir = new G4UIdirectory("/LXe/gen/");
+    fGeneratorDir->SetGuidance("Detector Event Generator Control");
+    
+    fSetGenCmd = new G4UIcmdWithAString("/LXe/gen/set",this);
+    fSetGenCmd->SetGuidance("Set generator.");
+    
+    fSetGeoCmd = new G4UIcmdWithAnInteger("/LXe/gen/geoset",this);
+    fSetGeoCmd->SetGuidance("Set geometry in generator.");
+    
+    fSetEnergyCmd = new G4UIcmdWithADouble("/LXe/gen/energy",this);
+    fSetEnergyCmd->SetGuidance("Set energy in keV.");
+}
 
-  public:
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-    LXePMTSD(G4String name);
-    virtual ~LXePMTSD();
- 
-    virtual void Initialize(G4HCofThisEvent* );
-    virtual G4bool ProcessHits(G4Step* aStep, G4TouchableHistory* );
- 
-    //A version of processHits that keeps aStep constant
-    G4bool ProcessHits_constStep(const G4Step* ,
-                                 G4TouchableHistory*, G4TrackVector*);
-    virtual void EndOfEvent(G4HCofThisEvent* );
-    virtual void clear();
-    void DrawAll();
-    void PrintAll();
- 
-    //Initialize the arrays to store pmt possitions
-    inline void InitPMTs(G4int nSiPMs){
-      if(SiPMPositionsX)delete SiPMPositionsX;
-      if(SiPMPositionsY)delete SiPMPositionsY;
-      if(SiPMPositionsZ)delete SiPMPositionsZ;
-      SiPMPositionsX=new G4DataVector(nSiPMs);
-      SiPMPositionsY=new G4DataVector(nSiPMs);
-      SiPMPositionsZ=new G4DataVector(nSiPMs);
+LXePrimaryGeneratorMessenger::~LXePrimaryGeneratorMessenger(){
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void LXePrimaryGeneratorMessenger::SetNewValue(G4UIcommand* command, G4String newValue){
+    
+    if( command == fSetGenCmd ){
+        fLXePrimaryGenerator->Set_generator(newValue);
+    }else if(command == fSetGeoCmd){
+        fLXePrimaryGenerator->SetGeometry(fSetGeoCmd->GetNewIntValue(newValue));
+    }else if(command == fSetEnergyCmd){
+        fLXePrimaryGenerator->SetEnergy(fSetEnergyCmd->GetNewDoubleValue(newValue));
     }
-
-    //Store a pmt position
-    inline void SetPMTPos(G4int n,G4double x,G4double y,G4double z){
-      if(SiPMPositionsX)SiPMPositionsX->insertAt(n,x);
-      if(SiPMPositionsY)SiPMPositionsY->insertAt(n,y);
-      if(SiPMPositionsZ)SiPMPositionsZ->insertAt(n,z);
-    }
-
-  private:
-
-    LXePMTHitsCollection* SiPMHitCollection;
-
-    G4DataVector* SiPMPositionsX;
-    G4DataVector* SiPMPositionsY;
-    G4DataVector* SiPMPositionsZ;
-};
-
-#endif
+    
+}

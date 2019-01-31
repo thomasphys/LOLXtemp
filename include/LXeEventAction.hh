@@ -64,10 +64,10 @@ class LXeEventAction : public G4UserEventAction
     LXeRecorderBase* fRecorder;
     LXeEventMessenger* fEventMessenger;
 
-    G4int              fSaveThreshold;
+    G4int fSaveThreshold;
 
-    G4int              fScintCollID;
-    G4int              fPMTCollID;
+    G4int fScintCollID;
+    G4int        fPMTCollID;
 
     G4int              fVerbose;
 

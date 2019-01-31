@@ -55,11 +55,11 @@ class LOLXRecorder : public LXeRecorderBase{
                 G4int n_photons = (*pmtHC)[i_sipm]->GetPhotonCount();
                 for(G4int i_photon=0;i_photon<n_photons;i_photon++){
                     mppc->AddSensorHit((*pmtHC)[i_sipm]->GetHitTime(i_photon));
-		    if((*pmtHC)[i_sipm]->GetHitProcess(i_photon) == 1) 
-			mppc->AddScintillationHit((*pmtHC)[i_sipm]->GetHitTime(i_photon));
-		    else if((*pmtHC)[i_sipm]->GetHitProcess(i_photon) == 0)
-			mppc->AddCherenkovHit((*pmtHC)[i_sipm]->GetHitTime(i_photon));
-
+                    daqsim->
+                    if((*pmtHC)[i_sipm]->GetHitProcess(i_photon) == 1)
+                        mppc->AddScintillationHit((*pmtHC)[i_sipm]->GetHitTime(i_photon));
+                    else if((*pmtHC)[i_sipm]->GetHitProcess(i_photon) == 0)
+                        mppc->AddCherenkovHit((*pmtHC)[i_sipm]->GetHitTime(i_photon));
                 }
                 event->AddMPPC(mppc);
             }

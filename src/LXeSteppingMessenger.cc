@@ -23,63 +23,38 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file optical/LXe/include/LXePMTSD.hh
-/// \brief Definition of the LXePMTSD class
+/// \file optical/LXe/src/LXeSteppingMessenger.cc
+/// \brief Implementation of the LXeSteppingMessenger class
 //
 //
-#ifndef LXePMTSD_h
-#define LXePMTSD_h 1
+#include "LXeSteppingMessenger.hh"
+#include "LXeSteppingAction.hh"
 
-#include "G4DataVector.hh"
-#include "G4VSensitiveDetector.hh"
-#include "LXePMTHit.hh"
+#include "G4UIdirectory.hh"
+#include "G4UIcmdWithABool.hh"
 
-class G4Step;
-class G4HCofThisEvent;
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class LXePMTSD : public G4VSensitiveDetector
+LXeSteppingMessenger::LXeSteppingMessenger(LXeSteppingAction* step)
+ : fStepping(step)
 {
+  fOneStepPrimariesCmd = new G4UIcmdWithABool("/LXe/oneStepPrimaries",this);
+  fOneStepPrimariesCmd->SetGuidance("Only allows primaries to go one step in the scintillator volume before being killed.");
 
-  public:
+}
 
-    LXePMTSD(G4String name);
-    virtual ~LXePMTSD();
- 
-    virtual void Initialize(G4HCofThisEvent* );
-    virtual G4bool ProcessHits(G4Step* aStep, G4TouchableHistory* );
- 
-    //A version of processHits that keeps aStep constant
-    G4bool ProcessHits_constStep(const G4Step* ,
-                                 G4TouchableHistory*, G4TrackVector*);
-    virtual void EndOfEvent(G4HCofThisEvent* );
-    virtual void clear();
-    void DrawAll();
-    void PrintAll();
- 
-    //Initialize the arrays to store pmt possitions
-    inline void InitPMTs(G4int nSiPMs){
-      if(SiPMPositionsX)delete SiPMPositionsX;
-      if(SiPMPositionsY)delete SiPMPositionsY;
-      if(SiPMPositionsZ)delete SiPMPositionsZ;
-      SiPMPositionsX=new G4DataVector(nSiPMs);
-      SiPMPositionsY=new G4DataVector(nSiPMs);
-      SiPMPositionsZ=new G4DataVector(nSiPMs);
-    }
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-    //Store a pmt position
-    inline void SetPMTPos(G4int n,G4double x,G4double y,G4double z){
-      if(SiPMPositionsX)SiPMPositionsX->insertAt(n,x);
-      if(SiPMPositionsY)SiPMPositionsY->insertAt(n,y);
-      if(SiPMPositionsZ)SiPMPositionsZ->insertAt(n,z);
-    }
+LXeSteppingMessenger::~LXeSteppingMessenger(){
+  delete fOneStepPrimariesCmd;
+}
 
-  private:
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-    LXePMTHitsCollection* SiPMHitCollection;
-
-    G4DataVector* SiPMPositionsX;
-    G4DataVector* SiPMPositionsY;
-    G4DataVector* SiPMPositionsZ;
-};
-
-#endif
+void 
+LXeSteppingMessenger::SetNewValue(G4UIcommand* command,G4String newValue){
+  if( command == fOneStepPrimariesCmd ){
+    fStepping->SetOneStepPrimaries(fOneStepPrimariesCmd
+                                  ->GetNewBoolValue(newValue));
+  }
+}

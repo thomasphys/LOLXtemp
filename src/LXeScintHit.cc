@@ -23,63 +23,61 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file optical/LXe/include/LXePMTSD.hh
-/// \brief Definition of the LXePMTSD class
+/// \file optical/LXe/src/LXeScintHit.cc
+/// \brief Implementation of the LXeScintHit class
 //
 //
-#ifndef LXePMTSD_h
-#define LXePMTSD_h 1
+#include "LXeScintHit.hh"
+#include "G4ios.hh"
+#include "G4VVisManager.hh"
+#include "G4Colour.hh"
+#include "G4VisAttributes.hh"
+#include "G4LogicalVolume.hh"
+#include "G4VPhysicalVolume.hh"
 
-#include "G4DataVector.hh"
-#include "G4VSensitiveDetector.hh"
-#include "LXePMTHit.hh"
+G4Allocator<LXeScintHit> LXeScintHitAllocator;
 
-class G4Step;
-class G4HCofThisEvent;
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class LXePMTSD : public G4VSensitiveDetector
+LXeScintHit::LXeScintHit() : fEdep(0.), fPos(0.), fPhysVol(0) {}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+LXeScintHit::LXeScintHit(G4VPhysicalVolume* pVol) : fPhysVol(pVol) {}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+LXeScintHit::~LXeScintHit() {}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+LXeScintHit::LXeScintHit(const LXeScintHit &right) : G4VHit()
 {
+  fEdep = right.fEdep;
+  fPos = right.fPos;
+  fPhysVol = right.fPhysVol;
+}
 
-  public:
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-    LXePMTSD(G4String name);
-    virtual ~LXePMTSD();
- 
-    virtual void Initialize(G4HCofThisEvent* );
-    virtual G4bool ProcessHits(G4Step* aStep, G4TouchableHistory* );
- 
-    //A version of processHits that keeps aStep constant
-    G4bool ProcessHits_constStep(const G4Step* ,
-                                 G4TouchableHistory*, G4TrackVector*);
-    virtual void EndOfEvent(G4HCofThisEvent* );
-    virtual void clear();
-    void DrawAll();
-    void PrintAll();
- 
-    //Initialize the arrays to store pmt possitions
-    inline void InitPMTs(G4int nSiPMs){
-      if(SiPMPositionsX)delete SiPMPositionsX;
-      if(SiPMPositionsY)delete SiPMPositionsY;
-      if(SiPMPositionsZ)delete SiPMPositionsZ;
-      SiPMPositionsX=new G4DataVector(nSiPMs);
-      SiPMPositionsY=new G4DataVector(nSiPMs);
-      SiPMPositionsZ=new G4DataVector(nSiPMs);
-    }
+const LXeScintHit& LXeScintHit::operator=(const LXeScintHit &right){
+  fEdep = right.fEdep;
+  fPos = right.fPos;
+  fPhysVol = right.fPhysVol;
+  return *this;
+}
 
-    //Store a pmt position
-    inline void SetPMTPos(G4int n,G4double x,G4double y,G4double z){
-      if(SiPMPositionsX)SiPMPositionsX->insertAt(n,x);
-      if(SiPMPositionsY)SiPMPositionsY->insertAt(n,y);
-      if(SiPMPositionsZ)SiPMPositionsZ->insertAt(n,z);
-    }
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-  private:
+G4int LXeScintHit::operator==(const LXeScintHit&) const{
+  return false;
+  //returns false because there currently isnt need to check for equality yet
+}
 
-    LXePMTHitsCollection* SiPMHitCollection;
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-    G4DataVector* SiPMPositionsX;
-    G4DataVector* SiPMPositionsY;
-    G4DataVector* SiPMPositionsZ;
-};
+void LXeScintHit::Draw() {}
 
-#endif
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void LXeScintHit::Print() {}

@@ -10,7 +10,8 @@ LDFLAGS       = $(OPT)
 SOFLAGS       = -Wl,-soname -shared 
 LIB_EXTRA     = 
 LIBS          = $(ROOTGLIBS) $(LIB_EXTRA) -L/usr/X11R6/lib -lXpm -lX11
-LOCALLIB = ../ds/libEvent.so
+LOCALLIB = /home/tmcelroy/lolxsim/ds/libEvent.so
+#LOCALLIB = -lEvent
 
 exe:   ProcessRun EventDisplay EventDisplay_Cyl LXeElectronCherenkov
 

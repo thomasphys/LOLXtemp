@@ -34,6 +34,7 @@
 #include "globals.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcmdWithADouble.hh"
 
 class LXePrimaryGeneratorAction;
 class G4UIcmdWithAnInteger;
@@ -54,6 +55,7 @@ class LXePrimaryGeneratorMessenger: public G4UImessenger
     G4UIdirectory *fGeneratorDir;
     G4UIcmdWithAString *fSetGenCmd;
     G4UIcmdWithAnInteger *fSetGeoCmd;
+    G4UIcmdWithADouble *fSetEnergyCmd;
 };
 
 #endif

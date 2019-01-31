@@ -79,6 +79,9 @@ class LXePrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     void Generate_nCaptureXe136(G4Event* anEvent);
     void SetGeometry(G4int _geometry){fGeometry = _geometry;}
     void Generate_singleelec(G4Event* anEvent);
+    void Generate_doubleelec(G4Event* anEvent);
+    void Generate_tripleelec(G4Event* anEvent);
+    void SetEnergy(G4double energy){fQ_value = energy*keV;}
 
   private:
 

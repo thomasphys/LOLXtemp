@@ -3,16 +3,16 @@
 /run/initialize
 /control/verbose 0
 /run/verbose 0
-/event/verbose 0
-/tracking/verbose 0
+/event/verbose 3
+/tracking/verbose 3
 /grdm/verbose 0
 
-#/LXe/gen/set gun
-#/LXe/gen/geoset 0
-#/gun/particle ion
-#/gun/ion 38 90 # Sr90
+/LXe/gen/set gun
+/LXe/gen/geoset 0
+/gun/particle ion
+/gun/ion 38 90 # Sr90
 #/LXe/gen/set bb2n
-/LXe/gen/set bb0n
+#/LXe/gen/set bb0n
 #/gun/position 0.0 0.0 0.0 mm
 #/gun/direction 0.0 0.0 1.0
-/run/beamOn 1
+/run/beamOn 10

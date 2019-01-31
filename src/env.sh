@@ -1,0 +1,1 @@
+export G4DICHROICDATA=/Users/thomasmcelroy/lolxsim/data/dichroic.dat

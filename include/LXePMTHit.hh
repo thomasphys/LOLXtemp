@@ -66,6 +66,8 @@ class LXePMTHit : public G4VHit
     inline G4int GetPhotonCount(){return fPhotons;}
     inline void AddHitTime(G4double time){hittimes.push_back(time);}
     G4double GetHitTime(G4int i){return hittimes[i];}
+    inline void AddHitPosition(G4ThreeVector pos){hitpos.push_back(pos);}
+    G4ThreeVector GetHitPosition(G4int i){return hitpos[i];}
     inline void AddHitProcess(int proc){hitprocess.push_back(proc);}
     int GetHitProcess(G4int i){return hitprocess[i];}
 
@@ -89,6 +91,7 @@ class LXePMTHit : public G4VHit
     G4VPhysicalVolume* fPhysVol;
     G4bool fDrawit;
     std::vector<G4double> hittimes;
+    std::vector<G4ThreeVector> hitpos;
     std::vector<int> hitprocess;    
 
 };

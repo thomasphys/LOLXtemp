@@ -23,63 +23,28 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file optical/LXe/include/LXePMTSD.hh
-/// \brief Definition of the LXePMTSD class
+/// \file optical/LXe/src/LXeUserTrackInformation.cc
+/// \brief Implementation of the LXeUserTrackInformation class
 //
 //
-#ifndef LXePMTSD_h
-#define LXePMTSD_h 1
+#include "LXeUserTrackInformation.hh"
 
-#include "G4DataVector.hh"
-#include "G4VSensitiveDetector.hh"
-#include "LXePMTHit.hh"
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class G4Step;
-class G4HCofThisEvent;
+LXeUserTrackInformation::LXeUserTrackInformation()
+  : fStatus(active),fReflections(0),fForcedraw(false) {}
 
-class LXePMTSD : public G4VSensitiveDetector
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+LXeUserTrackInformation::~LXeUserTrackInformation() {}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void LXeUserTrackInformation::AddTrackStatusFlag(int s)
 {
-
-  public:
-
-    LXePMTSD(G4String name);
-    virtual ~LXePMTSD();
- 
-    virtual void Initialize(G4HCofThisEvent* );
-    virtual G4bool ProcessHits(G4Step* aStep, G4TouchableHistory* );
- 
-    //A version of processHits that keeps aStep constant
-    G4bool ProcessHits_constStep(const G4Step* ,
-                                 G4TouchableHistory*, G4TrackVector*);
-    virtual void EndOfEvent(G4HCofThisEvent* );
-    virtual void clear();
-    void DrawAll();
-    void PrintAll();
- 
-    //Initialize the arrays to store pmt possitions
-    inline void InitPMTs(G4int nSiPMs){
-      if(SiPMPositionsX)delete SiPMPositionsX;
-      if(SiPMPositionsY)delete SiPMPositionsY;
-      if(SiPMPositionsZ)delete SiPMPositionsZ;
-      SiPMPositionsX=new G4DataVector(nSiPMs);
-      SiPMPositionsY=new G4DataVector(nSiPMs);
-      SiPMPositionsZ=new G4DataVector(nSiPMs);
-    }
-
-    //Store a pmt position
-    inline void SetPMTPos(G4int n,G4double x,G4double y,G4double z){
-      if(SiPMPositionsX)SiPMPositionsX->insertAt(n,x);
-      if(SiPMPositionsY)SiPMPositionsY->insertAt(n,y);
-      if(SiPMPositionsZ)SiPMPositionsZ->insertAt(n,z);
-    }
-
-  private:
-
-    LXePMTHitsCollection* SiPMHitCollection;
-
-    G4DataVector* SiPMPositionsX;
-    G4DataVector* SiPMPositionsY;
-    G4DataVector* SiPMPositionsZ;
-};
-
-#endif
+  if(s&active) //track is now active
+    fStatus&=~inactive; //remove any flags indicating it is inactive
+  else if(s&inactive) //track is now inactive
+    fStatus&=~active; //remove any flags indicating it is active
+  fStatus|=s; //add new flags
+}
